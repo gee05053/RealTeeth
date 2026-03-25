@@ -1,3 +1,4 @@
+import useRegionFromCoordQuery from '@/entities/location/model/queries';
 import useWeatherQuery from '@/entities/weather/model/queries';
 import useDetectLocation from '@/features/detect-location/hooks/useDetectLocation';
 import PageContainer from '@/shared/ui/page-container/PageContainer';
@@ -11,6 +12,7 @@ const WeatherHomePage = () => {
     isLoading: isLocating,
     errorMessage: locationErrorMessage,
   } = useDetectLocation();
+  const { data: region } = useRegionFromCoordQuery(location?.latitude, location?.longitude);
   const {
     data: weather,
     isLoading: isWeatherLoading,
@@ -67,7 +69,11 @@ const WeatherHomePage = () => {
   return (
     <PageContainer>
       <section className="rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
-        <p className="text-sm text-white/60">현재 위치</p>
+        <p className="text-sm text-white/60">
+          {region
+            ? `${region.region1DepthName} ${region.region2DepthName} ${region.region3DepthName}`
+            : '현재 위치'}
+        </p>
         <div className="mt-2 flex flex-col gap-4">
           <span className="text-7xl font-normal text-white">{currentWeather.temperature}°</span>
           <span className="mb-2 text-xl text-white/80">{conditionLabel}</span>
