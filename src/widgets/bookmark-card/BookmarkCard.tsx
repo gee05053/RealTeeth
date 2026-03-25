@@ -41,7 +41,7 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
           <div className="flex flex-1 items-center gap-3">
             <input
               type="text"
-              className="flex-1 rounded-lg bg-white/20 px-2 py-1 text-sm text-white outline-none"
+              className="w-full flex-1 rounded-lg bg-white/20 px-2 py-1 text-sm text-white outline-none"
               autoFocus
               value={aliasInput}
               onChange={e => setAliasInput(e.target.value)}
