@@ -13,9 +13,9 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
     data: weather,
     isLoading: isWeatherLoading,
     error: weatherError,
-  } = useWeatherQuery(activeLocation?.nx, activeLocation?.ny);
+  } = useWeatherQuery(activeLocation.nx, activeLocation.ny);
 
-  const locationLabel = activeLocation?.label ?? activeLocation?.fullLabel ?? '';
+  const locationLabel = activeLocation?.label || activeLocation?.fullLabel || '';
 
   const { bookmarks, addBookmark, removeBookmark } = useBookmarks();
 
@@ -23,7 +23,7 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
     id: locationLabel,
     alias: locationLabel,
     label: locationLabel,
-    fullLabel: locationLabel,
+    fullLabel: activeLocation?.fullLabel || locationLabel,
     latitude: activeLocation.latitude,
     longitude: activeLocation.longitude,
     nx: activeLocation.nx,
@@ -46,7 +46,7 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
       ? '해당 장소의 정보가 제공되지 않습니다.'
       : null;
 
-  if (weatherStatusMessage) {
+  if (weatherStatusMessage)
     return (
       <section className="flex flex-col gap-6 rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
         <div className="flex flex-1 items-center justify-center">
@@ -54,7 +54,6 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
         </div>
       </section>
     );
-  }
 
   const { currentWeather, daily, hourly } = weather!;
 
@@ -67,14 +66,14 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
     <section className="flex flex-col gap-6 rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
       <div>
         <div className="flex items-start justify-between">
-          <p className="text-sm text-white/60">{locationLabel}</p>
-          <button type="button" onClick={handleBookmarkToggle} className="text-xl leading-none">
+          <p className="text-base text-white/60">{locationLabel}</p>
+          <button className="text-xl leading-none" onClick={handleBookmarkToggle}>
             {isBookmarked ? '★' : '☆'}
           </button>
         </div>
-        <div className="mt-2 flex flex-col gap-4">
+        <div className="mt-2 flex items-end gap-4">
           <span className="text-7xl font-normal text-white">{currentWeather.temperature}°</span>
-          <span className="mb-2 text-xl text-white/80">{conditionLabel}</span>
+          <span className="text-lg text-white/70">{conditionLabel}</span>
         </div>
         <div className="mt-4 text-sm">
           {daily.minDailyTemperature !== null && daily.maxDailyTemperature !== null ? (
@@ -87,31 +86,29 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
               </span>
             </div>
           ) : (
-            <span className="text-white/55">제공된 최고/최저 기온 데이터가 없어요.</span>
+            <span className="text-white/70">제공된 최고/최저 기온 데이터가 없어요.</span>
           )}
         </div>
       </div>
 
-      <div>
-        <h3 className="mb-3 text-sm font-medium text-white/60">시간대별 기온</h3>
-        <div className="flex gap-3 overflow-x-auto pb-2">
-          {hourly.map(item => {
-            const hourlyConditionLabel =
-              item.pty !== 0 ? PTY_LABEL[item.pty] : SKY_LABEL[item.sky ?? 1];
-            return (
-              <div
-                key={`${item.fcstDate}_${item.fcstTime}`}
-                className="flex min-w-20 flex-col items-center gap-1 rounded-xl bg-white/10 px-2 py-3 text-white"
-              >
-                <span className="text-xs text-white/60">
-                  {item.fcstTime.slice(0, 2)}:{item.fcstTime.slice(2, 4)}
-                </span>
-                <span className="text-xs text-white/60">{hourlyConditionLabel}</span>
-                <span className="text-sm font-medium">{item.temperature}°</span>
-              </div>
-            );
-          })}
-        </div>
+      <div className="flex gap-3 overflow-x-auto pb-2">
+        {hourly.map(item => {
+          const hourlyConditionLabel =
+            item.pty !== 0 ? PTY_LABEL[item.pty] : SKY_LABEL[item.sky ?? 1];
+          return (
+            <div
+              key={`${item.fcstDate}_${item.fcstTime}`}
+              className="flex min-w-20 flex-col items-center gap-1 rounded-xl bg-white/10 px-2 py-3 text-white"
+            >
+              <span className="text-xs text-white/60">
+                {item.fcstTime.slice(0, 2)}:{item.fcstTime.slice(2, 4)}
+              </span>
+              {/* 시간대 날씨 상태 아이콘 적용 */}
+              <span className="text-xs text-white/60">{hourlyConditionLabel}</span>
+              <span className="text-sm font-medium">{item.temperature}°</span>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

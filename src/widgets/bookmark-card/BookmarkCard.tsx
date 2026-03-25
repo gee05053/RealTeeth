@@ -76,7 +76,7 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
         ) : (
           <div className="flex-1">
             <p className="text-sm font-medium text-white">{bookmark.alias}</p>
-            {bookmark.alias !== bookmark.fullLabel && (
+            {bookmark.fullLabel && (
               <p className="mt-0.5 text-xs text-white/50">{bookmark.fullLabel}</p>
             )}
           </div>
@@ -118,7 +118,7 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
           </div>
           {weather.daily.minDailyTemperature !== null &&
           weather.daily.maxDailyTemperature !== null ? (
-            <div className="mt-1 flex gap-3 text-xs text-white/60">
+            <div className="mt-1 flex gap-3 text-xs text-white/70">
               <span>최저 {weather.daily.minDailyTemperature}°</span>
               <span>최고 {weather.daily.maxDailyTemperature}°</span>
             </div>

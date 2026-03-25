@@ -53,18 +53,10 @@ const BookmarkDetailPage = () => {
   return (
     <PageContainer>
       <div className="flex items-center justify-between">
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          className="text-sm text-white/70 hover:text-white"
-        >
+        <button className="text-sm text-white/70 hover:text-white" onClick={() => navigate('/')}>
           ← 뒤로
         </button>
-        <button
-          type="button"
-          onClick={handleRemove}
-          className="text-sm text-white/50 hover:text-white/80"
-        >
+        <button className="text-sm text-white/50 hover:text-white/80" onClick={handleRemove}>
           북마크 삭제
         </button>
       </div>
@@ -75,72 +67,68 @@ const BookmarkDetailPage = () => {
         </div>
       ) : (
         <>
-          <section className="rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
-            <div className="flex items-start justify-between">
-              {isEditingAlias ? (
-                <div className="flex flex-1 items-center gap-2">
-                  <input
-                    type="text"
-                    value={aliasInput}
-                    onChange={e => setAliasInput(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && handleSaveAlias()}
-                    className="flex-1 rounded-lg bg-white/20 px-3 py-1 text-sm text-white outline-none"
-                    autoFocus
-                  />
-                  <button
-                    type="button"
-                    onClick={handleSaveAlias}
-                    className="text-sm text-white/70 hover:text-white"
-                  >
-                    저장
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAliasInput(bookmark!.alias);
-                      setIsEditingAlias(false);
-                    }}
-                    className="text-sm text-white/50 hover:text-white/70"
-                  >
-                    취소
-                  </button>
-                </div>
-              ) : (
-                <div className="flex flex-1 items-center gap-2">
-                  <p className="text-sm font-medium text-white">{bookmark!.alias}</p>
-                  <button
-                    type="button"
-                    onClick={() => setIsEditingAlias(true)}
-                    className="text-xs text-white/40 hover:text-white/70"
-                  >
-                    수정
-                  </button>
-                </div>
-              )}
+          <section className="flex flex-col gap-6 rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
+            <div>
+              <div className="flex items-start justify-between">
+                {isEditingAlias ? (
+                  <div className="flex flex-1 items-center gap-2">
+                    <input
+                      type="text"
+                      className="flex-1 rounded-lg bg-white/20 px-3 py-1 text-sm text-white outline-none"
+                      autoFocus
+                      value={aliasInput}
+                      onChange={e => setAliasInput(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && handleSaveAlias()}
+                    />
+                    <button
+                      className="text-sm text-white/70 hover:text-white"
+                      onClick={handleSaveAlias}
+                    >
+                      저장
+                    </button>
+                    <button
+                      className="text-sm text-white/50 hover:text-white/70"
+                      onClick={() => {
+                        setAliasInput(bookmark!.alias);
+                        setIsEditingAlias(false);
+                      }}
+                    >
+                      취소
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex flex-1 items-center gap-2">
+                    <p className="text-base font-medium text-white">{bookmark!.alias}</p>
+                    <button
+                      className="text-xs text-white/40 hover:text-white/70"
+                      onClick={() => setIsEditingAlias(true)}
+                    >
+                      수정
+                    </button>
+                  </div>
+                )}
+              </div>
+              <p className="mt-1 text-xs text-white/50">{bookmark!.fullLabel}</p>
+              <div className="mt-4 flex items-end gap-4">
+                <span className="text-7xl font-normal text-white">{currentWeather.temperature}°</span>
+                <span className="mb-2 text-lg text-white/70">{conditionLabel}</span>
+              </div>
+              <div className="mt-4 text-sm">
+                {daily.minDailyTemperature !== null && daily.maxDailyTemperature !== null ? (
+                  <div className="flex flex-wrap gap-x-4 text-white/70">
+                    <span>
+                      최저 <span className="font-normal text-white">{daily.minDailyTemperature}°</span>
+                    </span>
+                    <span>
+                      최고 <span className="font-normal text-white">{daily.maxDailyTemperature}°</span>
+                    </span>
+                  </div>
+                ) : (
+                  <span className="text-white/70">제공된 최고/최저 기온 데이터가 없어요.</span>
+                )}
+              </div>
             </div>
-            <p className="mt-1 text-xs text-white/50">{bookmark!.fullLabel}</p>
-            <div className="mt-4 flex flex-col gap-4">
-              <span className="text-7xl font-normal text-white">{currentWeather.temperature}°</span>
-              <span className="mb-2 text-xl text-white/80">{conditionLabel}</span>
-            </div>
-            <div className="mt-4 text-sm">
-              {daily.minDailyTemperature !== null && daily.maxDailyTemperature !== null ? (
-                <div className="flex flex-wrap gap-x-4 text-white/70">
-                  <span>
-                    최저 <span className="font-normal text-white">{daily.minDailyTemperature}°</span>
-                  </span>
-                  <span>
-                    최고 <span className="font-normal text-white">{daily.maxDailyTemperature}°</span>
-                  </span>
-                </div>
-              ) : (
-                <span className="text-white/55">제공된 최고/최저 기온 데이터가 없어요.</span>
-              )}
-            </div>
-          </section>
 
-          <section className="rounded-2xl bg-white/10 p-4 backdrop-blur-sm">
-            <h3 className="mb-3 text-sm font-medium text-white/60">시간대별 기온</h3>
             <div className="flex gap-3 overflow-x-auto pb-2">
               {hourly.map(item => {
                 const hourlyConditionLabel =
