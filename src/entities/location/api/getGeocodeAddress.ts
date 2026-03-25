@@ -1,12 +1,6 @@
+import { type GeocodedLocationType } from '@/entities/location/model/types';
 import { latLonToGrid } from '@/entities/location/lib/convertToGrid';
 import { env } from '@/shared/config/env';
-
-export type GeocodedLocationType = {
-  latitude: number;
-  longitude: number;
-  nx: number;
-  ny: number;
-};
 
 type KakaoAddressDoc = {
   address_name: string; // 전체 주소, 입력에 따라 결정

@@ -1,21 +1,25 @@
 import type { BookmarkType } from '@/entities/bookmark/model/types';
-import type { GeocodedLocationType } from '@/entities/location/api/getGeocodeAddress';
 import { PTY_LABEL, SKY_LABEL } from '@/entities/weather/lib/weatherLabels';
-import type { WeatherInfoType } from '@/entities/weather/model/types';
+import useWeatherQuery from '@/entities/weather/model/queries';
 import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
+import type { DetectedLocationType } from '@/features/detect-location/hooks/useDetectLocation';
 
 type WeatherInfoProps = {
-  weather: WeatherInfoType;
-  locationLabel: string;
-  activeLocation: GeocodedLocationType;
+  activeLocation: DetectedLocationType;
 };
 
-const WeatherInfo = ({ weather, locationLabel, activeLocation }: WeatherInfoProps) => {
+const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
+  const {
+    data: weather,
+    isLoading: isWeatherLoading,
+    error: weatherError,
+  } = useWeatherQuery(activeLocation?.nx, activeLocation?.ny);
+
+  const locationLabel = activeLocation?.label ?? activeLocation?.fullLabel ?? '';
+
   const { bookmarks, addBookmark, removeBookmark } = useBookmarks();
-  const { currentWeather, daily, hourly } = weather;
 
   const bookmarkTarget: BookmarkType = {
-    // 검색 위치는 지역 문자열(안정적), 감지 위치는 region 이름(GPS 오차 없음)
     id: locationLabel,
     alias: locationLabel,
     label: locationLabel,
@@ -26,15 +30,33 @@ const WeatherInfo = ({ weather, locationLabel, activeLocation }: WeatherInfoProp
     ny: activeLocation.ny,
   };
 
-  const bookmarked = bookmarks.some(b => b.id === bookmarkTarget.id);
+  const isBookmarked = bookmarks.some(b => b.id === bookmarkTarget.id);
 
   const handleBookmarkToggle = () => {
-    if (bookmarked) {
+    if (isBookmarked) {
       removeBookmark(bookmarkTarget.id);
     } else {
       addBookmark(bookmarkTarget);
     }
   };
+
+  const weatherStatusMessage = isWeatherLoading
+    ? '날씨 정보를 불러오는 중...'
+    : weatherError || !weather
+      ? '해당 장소의 정보가 제공되지 않습니다.'
+      : null;
+
+  if (weatherStatusMessage) {
+    return (
+      <section className="flex flex-col gap-6 rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
+        <div className="flex flex-1 items-center justify-center">
+          <p className="text-white/70">{weatherStatusMessage}</p>
+        </div>
+      </section>
+    );
+  }
+
+  const { currentWeather, daily, hourly } = weather!;
 
   const conditionLabel =
     currentWeather.precipitationType !== 0
@@ -46,13 +68,8 @@ const WeatherInfo = ({ weather, locationLabel, activeLocation }: WeatherInfoProp
       <div>
         <div className="flex items-start justify-between">
           <p className="text-sm text-white/60">{locationLabel}</p>
-          <button
-            type="button"
-            onClick={handleBookmarkToggle}
-            className="text-xl leading-none"
-            aria-label={bookmarked ? '북마크 삭제' : '북마크 추가'}
-          >
-            {bookmarked ? '★' : '☆'}
+          <button type="button" onClick={handleBookmarkToggle} className="text-xl leading-none">
+            {isBookmarked ? '★' : '☆'}
           </button>
         </div>
         <div className="mt-2 flex flex-col gap-4">

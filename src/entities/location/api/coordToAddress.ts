@@ -30,10 +30,7 @@ const fetchRegionFromCoord = async (
   url.searchParams.set('y', String(latitude));
 
   const res = await fetch(url.toString(), {
-    headers: {
-      Authorization: `KakaoAK ${env.KAKAO_REST_API_KEY}`,
-      'Content-Type': 'application/json;charset=UTF-8',
-    },
+    headers: { Authorization: `KakaoAK ${env.KAKAO_REST_API_KEY}` },
   });
 
   if (!res.ok) return null;

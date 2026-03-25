@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 
-import getGeocodeToAddress, {
-  type GeocodedLocationType,
-} from '@/entities/location/api/getGeocodeAddress';
+import getGeocodeToAddress from '@/entities/location/api/getGeocodeAddress';
 import searchDistricts, { type SearchResultType } from '@/entities/location/lib/searchDistricts';
+import type { GeocodedLocationType } from '@/entities/location/model/types';
 
 type LocationSearchProps = {
-  onRequestSelectedLocation: (result: SearchResultType, location: GeocodedLocationType | null) => void;
+  onRequestSelectedLocation: (result: SearchResultType & Partial<GeocodedLocationType>) => void;
 };
 
 const LocationSearch = ({ onRequestSelectedLocation }: LocationSearchProps) => {
@@ -57,7 +56,7 @@ const LocationSearch = ({ onRequestSelectedLocation }: LocationSearchProps) => {
 
     const location = await getGeocodeToAddress(selectedResult.fullLabel);
     setIsGeocoding(false);
-    onRequestSelectedLocation(selectedResult, location);
+    onRequestSelectedLocation({ ...selectedResult, ...location });
   };
 
   return (

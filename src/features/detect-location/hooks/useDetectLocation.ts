@@ -1,12 +1,18 @@
 import { useEffect, useState } from 'react';
 
-import { type GeocodedLocationType } from '@/entities/location/api/getGeocodeAddress';
+import { type GeocodedLocationType } from '@/entities/location/model/types';
 import { latLonToGrid } from '@/entities/location/lib/convertToGrid';
+import useRegionFromCoordQuery from '@/entities/location/model/queries';
+
+export type DetectedLocationType = GeocodedLocationType & {
+  label: string;
+  fullLabel: string;
+};
 
 const isGeolocationSupported = typeof navigator !== 'undefined' && !!navigator.geolocation;
 
 const useDetectLocation = () => {
-  const [location, setLocation] = useState<GeocodedLocationType | null>(null);
+  const [coords, setCoords] = useState<GeocodedLocationType | null>(null);
   const [isLoading, setIsLoading] = useState(isGeolocationSupported);
   const [errorMessage, setErrorMessage] = useState<string | null>(
     isGeolocationSupported ? null : '브라우저가 위치 감지를 지원하지 않습니다.'
@@ -19,7 +25,7 @@ const useDetectLocation = () => {
       position => {
         const { latitude, longitude } = position.coords;
         const { nx, ny } = latLonToGrid(latitude, longitude);
-        setLocation({ latitude, longitude, nx, ny });
+        setCoords({ latitude, longitude, nx, ny });
         setIsLoading(false);
       },
       () => {
@@ -30,7 +36,13 @@ const useDetectLocation = () => {
     );
   }, []);
 
-  return { location, isLoading, errorMessage };
+  const { data: region } = useRegionFromCoordQuery(coords?.latitude, coords?.longitude);
+
+  const detectedLocation: DetectedLocationType | null = coords
+    ? { ...coords, label: region?.region3DepthName || '', fullLabel: region?.addressName || '' }
+    : null;
+
+  return { detectedLocation, isLoading, errorMessage };
 };
 
 export default useDetectLocation;
