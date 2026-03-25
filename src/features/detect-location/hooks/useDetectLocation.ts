@@ -1,18 +1,12 @@
 import { useEffect, useState } from 'react';
 
+import { type GeocodedLocationType } from '@/entities/location/api/getGeocodeAddress';
 import { latLonToGrid } from '@/entities/location/lib/convertToGrid';
-
-export type DetectedLocationType = {
-  latitude: number; // 위도
-  longitude: number; // 경도
-  nx: number; // 격자 X 좌표
-  ny: number; // 격자 Y 좌표
-};
 
 const isGeolocationSupported = typeof navigator !== 'undefined' && !!navigator.geolocation;
 
 const useDetectLocation = () => {
-  const [location, setLocation] = useState<DetectedLocationType | null>(null);
+  const [location, setLocation] = useState<GeocodedLocationType | null>(null);
   const [isLoading, setIsLoading] = useState(isGeolocationSupported);
   const [errorMessage, setErrorMessage] = useState<string | null>(
     isGeolocationSupported ? null : '브라우저가 위치 감지를 지원하지 않습니다.'

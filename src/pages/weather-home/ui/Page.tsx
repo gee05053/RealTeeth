@@ -1,27 +1,45 @@
+import { useState } from 'react';
+
+import type { GeocodedLocationType } from '@/entities/location/api/getGeocodeAddress';
 import useRegionFromCoordQuery from '@/entities/location/model/queries';
 import useWeatherQuery from '@/entities/weather/model/queries';
 import useDetectLocation from '@/features/detect-location/hooks/useDetectLocation';
 import PageContainer from '@/shared/ui/page-container/PageContainer';
+import LocationSearch from '@/widgets/location-search/ui/LocationSearch';
 
 const SKY_LABEL: Record<number, string> = { 1: '맑음', 3: '구름 많음', 4: '흐림' }; // 하늘 상태 라벨
 const PTY_LABEL: Record<number, string> = { 0: '없음', 1: '비', 2: '비/눈', 3: '눈', 4: '소나기' }; // 강수형태 라벨
 
 const WeatherHomePage = () => {
+  const [searchedLocation, setSearchedLocation] = useState<GeocodedLocationType | null>(null);
+
   const {
-    location,
+    location: detectedLocation,
     isLoading: isLocating,
     errorMessage: locationErrorMessage,
   } = useDetectLocation();
-  const { data: region } = useRegionFromCoordQuery(location?.latitude, location?.longitude);
+
+  // 검색으로 선택한 위치가 있으면 그걸 쓰고, 없으면 감지된 위치 사용
+  const activeLocation = searchedLocation ?? detectedLocation;
+
+  const { data: region } = useRegionFromCoordQuery(
+    activeLocation?.latitude,
+    activeLocation?.longitude
+  );
   const {
     data: weather,
     isLoading: isWeatherLoading,
     error: weatherError,
-  } = useWeatherQuery(location?.nx, location?.ny);
+  } = useWeatherQuery(activeLocation?.nx, activeLocation?.ny);
+
+  const locationLabel = region
+    ? `${region.region1DepthName} ${region.region2DepthName} ${region.region3DepthName}`
+    : '현재 위치';
 
   if (isLocating) {
     return (
       <PageContainer>
+        <LocationSearch onRequestSelectedLocation={setSearchedLocation} />
         <div className="flex flex-1 items-center justify-center">
           <p className="text-white/70">위치를 감지하는 중...</p>
         </div>
@@ -29,9 +47,10 @@ const WeatherHomePage = () => {
     );
   }
 
-  if (locationErrorMessage) {
+  if (locationErrorMessage && !activeLocation) {
     return (
       <PageContainer>
+        <LocationSearch onRequestSelectedLocation={setSearchedLocation} />
         <div className="flex flex-1 items-center justify-center">
           <p className="text-white/70">{locationErrorMessage}</p>
         </div>
@@ -42,6 +61,7 @@ const WeatherHomePage = () => {
   if (isWeatherLoading) {
     return (
       <PageContainer>
+        <LocationSearch onRequestSelectedLocation={setSearchedLocation} />
         <div className="flex flex-1 items-center justify-center">
           <p className="text-white/70">날씨 정보를 불러오는 중...</p>
         </div>
@@ -52,15 +72,15 @@ const WeatherHomePage = () => {
   if (weatherError || !weather) {
     return (
       <PageContainer>
+        <LocationSearch onRequestSelectedLocation={setSearchedLocation} />
         <div className="flex flex-1 items-center justify-center">
-          <p className="text-white/70">날씨 정보를 불러오지 못했습니다.</p>
+          <p className="text-white/70">해당 장소의 정보가 제공되지 않습니다.</p>
         </div>
       </PageContainer>
     );
   }
 
   const { currentWeather, daily, hourly } = weather;
-
   const conditionLabel =
     currentWeather.precipitationType !== 0
       ? PTY_LABEL[currentWeather.precipitationType]
@@ -68,12 +88,10 @@ const WeatherHomePage = () => {
 
   return (
     <PageContainer>
+      <LocationSearch onRequestSelectedLocation={setSearchedLocation} />
+
       <section className="rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
-        <p className="text-sm text-white/60">
-          {region
-            ? `${region.region1DepthName} ${region.region2DepthName} ${region.region3DepthName}`
-            : '현재 위치'}
-        </p>
+        <p className="text-sm text-white/60">{locationLabel}</p>
         <div className="mt-2 flex flex-col gap-4">
           <span className="text-7xl font-normal text-white">{currentWeather.temperature}°</span>
           <span className="mb-2 text-xl text-white/80">{conditionLabel}</span>
@@ -94,12 +112,12 @@ const WeatherHomePage = () => {
         </div>
       </section>
 
-      {/* 시간대별 기온 */}
       <section className="rounded-2xl bg-white/10 p-4 backdrop-blur-sm">
         <h3 className="mb-3 text-sm font-medium text-white/60">시간대별 기온</h3>
         <div className="flex gap-3 overflow-x-auto pb-2">
           {hourly.map(item => {
-            const conditionLabel = item.pty !== 0 ? PTY_LABEL[item.pty] : SKY_LABEL[item.sky ?? 1];
+            const hourlyConditionLabel =
+              item.pty !== 0 ? PTY_LABEL[item.pty] : SKY_LABEL[item.sky ?? 1];
             return (
               <div
                 key={`${item.fcstDate}_${item.fcstTime}`}
@@ -108,7 +126,7 @@ const WeatherHomePage = () => {
                 <span className="text-xs text-white/60">
                   {item.fcstTime.slice(0, 2)}:{item.fcstTime.slice(2, 4)}
                 </span>
-                <span className="text-xs text-white/60">{conditionLabel}</span>
+                <span className="text-xs text-white/60">{hourlyConditionLabel}</span>
                 <span className="text-sm font-medium">{item.temperature}°</span>
               </div>
             );
