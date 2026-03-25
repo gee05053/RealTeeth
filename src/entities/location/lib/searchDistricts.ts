@@ -15,6 +15,14 @@ const parseDistrict = (raw: string): SearchResultType => {
   };
 };
 
+// 정확도 점수: 세그먼트 완전 일치(2) > 부분 포함(1)
+const getRelevanceScore = (raw: string, query: string): number => {
+  for (const segment of raw.split('-')) {
+    if (segment === query) return 2;
+  }
+  return 1;
+};
+
 const searchDistricts = (inputSearchValue: string): SearchResultType[] => {
   const trimmedSearchValue = inputSearchValue.trim().split(' ').join('');
 
@@ -22,8 +30,9 @@ const searchDistricts = (inputSearchValue: string): SearchResultType[] => {
 
   return (districts as string[])
     .filter(raw => raw.split('-').join('').includes(trimmedSearchValue))
-    .map(parseDistrict)
-    .sort((a, b) => a.fullLabel.localeCompare(b.fullLabel, 'ko'));
+    .map(raw => ({ result: parseDistrict(raw), score: getRelevanceScore(raw, trimmedSearchValue) }))
+    .sort((a, b) => b.score - a.score || a.result.fullLabel.localeCompare(b.result.fullLabel, 'ko'))
+    .map(({ result }) => result);
 };
 
 export default searchDistricts;
