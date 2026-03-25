@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import BookmarkDetailPage from '@/pages/bookmark-detail/ui/Page';
-import WeatherHomePage from '@/pages/weather-home/ui/Page';
+import BookmarkDetailPage from '@/pages/bookmark-detail/Page';
+import WeatherHomePage from '@/pages/weather-home/Page';
 
 export const router = createBrowserRouter([
   {
