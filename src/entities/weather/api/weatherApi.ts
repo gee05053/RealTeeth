@@ -24,6 +24,18 @@ const getUltraSrtNcstBaseTime = (): { baseDate: string; baseTime: string } => {
   return { baseDate: formatDate(now), baseTime: formatHour(hours) };
 };
 
+// 당일 최저/최고 기온 전용: TMN은 0200에만 발표되므로 오늘 0200 고정 사용
+// 02:10 이전이면 아직 오늘 0200이 발표 전이므로 어제 2300 사용
+const getDailyTempBaseTime = (): { baseDate: string; baseTime: string } => {
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+  if (currentMinutes >= 2 * 60 + 10) return { baseDate: formatDate(now), baseTime: '0200' };
+
+  const yesterday = new Date(now.setDate(now.getDate() - 1));
+  return { baseDate: formatDate(yesterday), baseTime: '2300' };
+};
+
 // 단기예보: 0200/0500/0800/1100/1400/1700/2000/2300, 각 +10분 후 발표
 const getVilageFcstBaseTime = (): { baseDate: string; baseTime: string } => {
   const now = new Date();
@@ -83,8 +95,9 @@ const fetchKmaData = async (
 const fetchWeatherInfo = async (nx: number, ny: number): Promise<WeatherInfoType> => {
   const { baseDate: ncstDate, baseTime: ncstTime } = getUltraSrtNcstBaseTime();
   const { baseDate: fcstDate, baseTime: fcstTime } = getVilageFcstBaseTime();
+  const { baseDate: dailyDate, baseTime: dailyTime } = getDailyTempBaseTime();
 
-  const [ncstItems, fcstItems] = await Promise.all([
+  const [ncstItems, fcstItems, dailyItems] = await Promise.all([
     fetchKmaData('getUltraSrtNcst', {
       base_date: ncstDate,
       base_time: ncstTime,
@@ -99,6 +112,14 @@ const fetchWeatherInfo = async (nx: number, ny: number): Promise<WeatherInfoType
       nx: String(nx),
       ny: String(ny),
       numOfRows: '336', //최대 1시간에 14개 데이터, 24시간 예보 데이터가 필요하므로 24 * 14 = 336개
+      pageNo: '1',
+    }),
+    fetchKmaData('getVilageFcst', {
+      base_date: dailyDate,
+      base_time: dailyTime,
+      nx: String(nx),
+      ny: String(ny),
+      numOfRows: '336',
       pageNo: '1',
     }),
   ]);
@@ -118,8 +139,16 @@ const fetchWeatherInfo = async (nx: number, ny: number): Promise<WeatherInfoType
   const today = formatDate(now);
   const todayHour = formatHour(now.getHours());
 
+  // 당일 최저/최고 기온: 이른 발표시각 응답에서 오늘 날짜의 TMN/TMX 추출
   let minDailyTemperature: number | null = null;
   let maxDailyTemperature: number | null = null;
+
+  for (const item of dailyItems) {
+    if (item.fcstDate === today && item.fcstValue) {
+      if (item.category === 'TMN') minDailyTemperature = parseFloat(item.fcstValue);
+      if (item.category === 'TMX') maxDailyTemperature = parseFloat(item.fcstValue);
+    }
+  }
 
   const hourlyMap = new Map<string, Partial<HourlyForecastType>>();
 
@@ -127,12 +156,8 @@ const fetchWeatherInfo = async (nx: number, ny: number): Promise<WeatherInfoType
     if (!item.fcstDate || !item.fcstTime || !item.fcstValue) continue;
     const key = `${item.fcstDate}_${item.fcstTime}`;
 
-    if (item.fcstDate === today) {
-      if (item.category === 'TMN') minDailyTemperature = parseFloat(item.fcstValue);
-      if (item.category === 'TMX') maxDailyTemperature = parseFloat(item.fcstValue);
-      if (item.fcstTime === todayHour && item.category === 'SKY')
-        currentWeather.sky = parseInt(item.fcstValue);
-    }
+    if (item.fcstDate === today && item.fcstTime === todayHour && item.category === 'SKY')
+      currentWeather.sky = parseInt(item.fcstValue);
 
     if (!hourlyMap.has(key)) {
       hourlyMap.set(key, { fcstDate: item.fcstDate, fcstTime: item.fcstTime });
