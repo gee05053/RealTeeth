@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { ArrowLeftIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PencilIcon } from '@heroicons/react/24/solid';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { PTY_LABEL, SKY_LABEL } from '@/entities/weather/lib/weatherLabels';
@@ -53,11 +55,11 @@ const BookmarkDetailPage = () => {
   return (
     <PageContainer>
       <div className="flex items-center justify-between">
-        <button className="text-sm text-white/70 hover:text-white" onClick={() => navigate('/')}>
-          ← 뒤로
+        <button className="cursor-pointer p-1 text-white/70 hover:text-white" onClick={() => navigate('/')}>
+          <ArrowLeftIcon className="size-5" />
         </button>
-        <button className="text-sm text-white/50 hover:text-white/80" onClick={handleRemove}>
-          북마크 삭제
+        <button className="cursor-pointer p-1 text-white/50 hover:text-white/80" onClick={handleRemove}>
+          <TrashIcon className="size-5" />
         </button>
       </div>
 
@@ -81,13 +83,13 @@ const BookmarkDetailPage = () => {
                       onKeyDown={e => e.key === 'Enter' && handleSaveAlias()}
                     />
                     <button
-                      className="text-sm text-white/70 hover:text-white"
+                      className="cursor-pointer px-2 py-1 text-sm text-white/70 hover:text-white"
                       onClick={handleSaveAlias}
                     >
                       저장
                     </button>
                     <button
-                      className="text-sm text-white/50 hover:text-white/70"
+                      className="cursor-pointer px-2 py-1 text-sm text-white/50 hover:text-white/70"
                       onClick={() => {
                         setAliasInput(bookmark!.alias);
                         setIsEditingAlias(false);
@@ -100,10 +102,10 @@ const BookmarkDetailPage = () => {
                   <div className="flex flex-1 items-center gap-2">
                     <p className="text-base font-medium text-white">{bookmark!.alias}</p>
                     <button
-                      className="text-xs text-white/40 hover:text-white/70"
+                      className="cursor-pointer p-1 text-white/40 hover:text-white/70"
                       onClick={() => setIsEditingAlias(true)}
                     >
-                      수정
+                      <PencilIcon className="size-3.5" />
                     </button>
                   </div>
                 )}

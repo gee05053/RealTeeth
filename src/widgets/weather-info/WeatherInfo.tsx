@@ -1,3 +1,6 @@
+import { BookmarkIcon as BookmarkOutlineIcon } from '@heroicons/react/24/outline';
+import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/24/solid';
+
 import type { BookmarkType } from '@/entities/bookmark/model/types';
 import { PTY_LABEL, SKY_LABEL } from '@/entities/weather/lib/weatherLabels';
 import useWeatherQuery from '@/entities/weather/model/queries';
@@ -67,8 +70,12 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
       <div>
         <div className="flex items-start justify-between">
           <p className="text-base text-white/60">{locationLabel}</p>
-          <button className="text-xl leading-none" onClick={handleBookmarkToggle}>
-            {isBookmarked ? '★' : '☆'}
+          <button className="cursor-pointer p-1" onClick={handleBookmarkToggle}>
+            {isBookmarked ? (
+              <BookmarkSolidIcon className="size-7 text-yellow-300" />
+            ) : (
+              <BookmarkOutlineIcon className="size-7 text-white/60" />
+            )}
           </button>
         </div>
         <div className="mt-2 flex items-end gap-4">

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { PencilIcon, BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/24/solid';
 import { useNavigate } from 'react-router-dom';
 
 import type { BookmarkType } from '@/entities/bookmark/model/types';
@@ -53,7 +54,7 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
             />
             <div className="flex gap-3">
               <button
-                className="flex-1 text-xs text-white/70 hover:text-white"
+                className="flex-1 cursor-pointer px-2 py-1 text-xs text-white/70 hover:text-white"
                 onClick={e => {
                   e.stopPropagation();
                   handleSaveAlias();
@@ -62,7 +63,7 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
                 저장
               </button>
               <button
-                className="flex-1 text-xs text-white/40 hover:text-white/60"
+                className="flex-1 cursor-pointer px-2 py-1 text-xs text-white/40 hover:text-white/60"
                 onClick={e => {
                   e.stopPropagation();
                   setAliasInput(bookmark.alias);
@@ -85,22 +86,22 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
         {!isEditingAlias && (
           <div className="flex shrink-0 items-center gap-3">
             <button
-              className="text-xs text-white/40 hover:text-white/70"
+              className="cursor-pointer p-1"
               onClick={e => {
                 e.stopPropagation();
                 setIsEditingAlias(true);
               }}
             >
-              ✎
+              <PencilIcon className="size-3.5 text-white/40 hover:text-white/70" />
             </button>
             <button
-              className="text-base text-yellow-300"
+              className="cursor-pointer p-1"
               onClick={e => {
                 e.stopPropagation();
                 onRemoveBookmark(bookmark.id);
               }}
             >
-              ★
+              <BookmarkSolidIcon className="size-4 text-yellow-300" />
             </button>
           </div>
         )}
