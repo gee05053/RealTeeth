@@ -6,7 +6,7 @@ import getGeocodeToAddress, {
 import searchDistricts, { type SearchResultType } from '@/entities/location/lib/searchDistricts';
 
 type LocationSearchProps = {
-  onRequestSelectedLocation: (location: GeocodedLocationType | null) => void;
+  onRequestSelectedLocation: (result: SearchResultType, location: GeocodedLocationType | null) => void;
 };
 
 const LocationSearch = ({ onRequestSelectedLocation }: LocationSearchProps) => {
@@ -57,7 +57,7 @@ const LocationSearch = ({ onRequestSelectedLocation }: LocationSearchProps) => {
 
     const location = await getGeocodeToAddress(selectedResult.fullLabel);
     setIsGeocoding(false);
-    onRequestSelectedLocation(location);
+    onRequestSelectedLocation(selectedResult, location);
   };
 
   return (

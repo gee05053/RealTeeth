@@ -1,17 +1,22 @@
 import { useState } from 'react';
 
+import type { BookmarkType } from '@/entities/bookmark/model/types';
 import type { GeocodedLocationType } from '@/entities/location/api/getGeocodeAddress';
+import type { SearchResultType } from '@/entities/location/lib/searchDistricts';
 import useRegionFromCoordQuery from '@/entities/location/model/queries';
+import { PTY_LABEL, SKY_LABEL } from '@/entities/weather/lib/weatherLabels';
 import useWeatherQuery from '@/entities/weather/model/queries';
+import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
 import useDetectLocation from '@/features/detect-location/hooks/useDetectLocation';
 import PageContainer from '@/shared/ui/page-container/PageContainer';
+import BookmarkCard from '@/widgets/bookmark-card/ui/BookmarkCard';
 import LocationSearch from '@/widgets/location-search/ui/LocationSearch';
 
-const SKY_LABEL: Record<number, string> = { 1: '맑음', 3: '구름 많음', 4: '흐림' }; // 하늘 상태 라벨
-const PTY_LABEL: Record<number, string> = { 0: '없음', 1: '비', 2: '비/눈', 3: '눈', 4: '소나기' }; // 강수형태 라벨
+type SearchedLocationType = SearchResultType & Partial<GeocodedLocationType>;
 
 const WeatherHomePage = () => {
-  const [searchedLocation, setSearchedLocation] = useState<GeocodedLocationType | null>(null);
+  const [searchedLocation, setSearchedLocation] = useState<SearchedLocationType | null>(null);
+  const { bookmarks, addBookmark, removeBookmark, updateBookmarkAlias } = useBookmarks();
 
   const {
     location: detectedLocation,
@@ -32,14 +37,23 @@ const WeatherHomePage = () => {
     error: weatherError,
   } = useWeatherQuery(activeLocation?.nx, activeLocation?.ny);
 
-  const locationLabel = region
-    ? `${region.region1DepthName} ${region.region2DepthName} ${region.region3DepthName}`
-    : '현재 위치';
+  const locationLabel = searchedLocation
+    ? searchedLocation.fullLabel
+    : region
+      ? `${region.region1DepthName} ${region.region2DepthName} ${region.region3DepthName}`
+      : '현재 위치';
+
+  const handleSelectLocation = (
+    result: SearchResultType,
+    location: GeocodedLocationType | null
+  ) => {
+    setSearchedLocation({ ...result, ...(location ?? {}) });
+  };
 
   if (isLocating) {
     return (
       <PageContainer>
-        <LocationSearch onRequestSelectedLocation={setSearchedLocation} />
+        <LocationSearch onRequestSelectedLocation={handleSelectLocation} />
         <div className="flex flex-1 items-center justify-center">
           <p className="text-white/70">위치를 감지하는 중...</p>
         </div>
@@ -50,7 +64,7 @@ const WeatherHomePage = () => {
   if (locationErrorMessage && !activeLocation) {
     return (
       <PageContainer>
-        <LocationSearch onRequestSelectedLocation={setSearchedLocation} />
+        <LocationSearch onRequestSelectedLocation={handleSelectLocation} />
         <div className="flex flex-1 items-center justify-center">
           <p className="text-white/70">{locationErrorMessage}</p>
         </div>
@@ -61,7 +75,7 @@ const WeatherHomePage = () => {
   if (isWeatherLoading) {
     return (
       <PageContainer>
-        <LocationSearch onRequestSelectedLocation={setSearchedLocation} />
+        <LocationSearch onRequestSelectedLocation={handleSelectLocation} />
         <div className="flex flex-1 items-center justify-center">
           <p className="text-white/70">날씨 정보를 불러오는 중...</p>
         </div>
@@ -72,7 +86,7 @@ const WeatherHomePage = () => {
   if (weatherError || !weather) {
     return (
       <PageContainer>
-        <LocationSearch onRequestSelectedLocation={setSearchedLocation} />
+        <LocationSearch onRequestSelectedLocation={handleSelectLocation} />
         <div className="flex flex-1 items-center justify-center">
           <p className="text-white/70">해당 장소의 정보가 제공되지 않습니다.</p>
         </div>
@@ -86,12 +100,45 @@ const WeatherHomePage = () => {
       ? PTY_LABEL[currentWeather.precipitationType]
       : SKY_LABEL[currentWeather.sky ?? 1];
 
+  const { latitude, longitude, nx, ny } = activeLocation as GeocodedLocationType;
+  const bookmarkTarget: BookmarkType = {
+    // 검색 위치는 지역 문자열(안정적), 감지 위치는 region 이름(GPS 오차 없음)
+    id: locationLabel,
+    alias: locationLabel,
+    label: locationLabel,
+    fullLabel: locationLabel,
+    latitude,
+    longitude,
+    nx,
+    ny,
+  };
+
+  const bookmarked = bookmarks.some(b => b.id === bookmarkTarget.id);
+
+  const handleBookmarkToggle = () => {
+    if (bookmarked) {
+      removeBookmark(bookmarkTarget.id);
+    } else {
+      addBookmark(bookmarkTarget);
+    }
+  };
+
   return (
     <PageContainer>
-      <LocationSearch onRequestSelectedLocation={setSearchedLocation} />
+      <LocationSearch onRequestSelectedLocation={handleSelectLocation} />
 
       <section className="rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
-        <p className="text-sm text-white/60">{locationLabel}</p>
+        <div className="flex items-start justify-between">
+          <p className="text-sm text-white/60">{locationLabel}</p>
+          <button
+            type="button"
+            onClick={handleBookmarkToggle}
+            className="text-xl leading-none"
+            aria-label={bookmarked ? '북마크 삭제' : '북마크 추가'}
+          >
+            {bookmarked ? '★' : '☆'}
+          </button>
+        </div>
         <div className="mt-2 flex flex-col gap-4">
           <span className="text-7xl font-normal text-white">{currentWeather.temperature}°</span>
           <span className="mb-2 text-xl text-white/80">{conditionLabel}</span>
@@ -132,6 +179,24 @@ const WeatherHomePage = () => {
             );
           })}
         </div>
+      </section>
+
+      <section>
+        <h3 className="mb-3 text-sm font-medium text-white/60">북마크</h3>
+        {bookmarks.length > 0 ? (
+          <div className="grid grid-cols-3 gap-3">
+            {bookmarks.map(bookmark => (
+              <BookmarkCard
+                key={bookmark.id}
+                bookmark={bookmark}
+                onRemoveBookmark={removeBookmark}
+                onUpdateBookmarkAlias={updateBookmarkAlias}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-white/40">현재 추가된 북마크가 없어요.</p>
+        )}
       </section>
     </PageContainer>
   );
