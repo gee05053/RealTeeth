@@ -3,6 +3,7 @@ import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/24/solid';
 
 import type { BookmarkType } from '@/entities/bookmark/model/types';
 import { PTY_LABEL, SKY_LABEL } from '@/entities/weather/lib/weatherLabels';
+import WeatherIcon from '@/entities/weather/ui/WeatherIcon';
 import useWeatherQuery from '@/entities/weather/model/queries';
 import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
 import type { DetectedLocationType } from '@/features/detect-location/hooks/useDetectLocation';
@@ -99,23 +100,18 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
       </div>
 
       <div className="flex gap-3 overflow-x-auto pb-2">
-        {hourly.map(item => {
-          const hourlyConditionLabel =
-            item.pty !== 0 ? PTY_LABEL[item.pty] : SKY_LABEL[item.sky ?? 1];
-          return (
-            <div
-              key={`${item.fcstDate}_${item.fcstTime}`}
-              className="flex min-w-20 flex-col items-center gap-1 rounded-xl bg-white/10 px-2 py-3 text-white"
-            >
-              <span className="text-xs text-white/60">
-                {item.fcstTime.slice(0, 2)}:{item.fcstTime.slice(2, 4)}
-              </span>
-              {/* 시간대 날씨 상태 아이콘 적용 */}
-              <span className="text-xs text-white/60">{hourlyConditionLabel}</span>
-              <span className="text-sm font-medium">{item.temperature}°</span>
-            </div>
-          );
-        })}
+        {hourly.map(item => (
+          <div
+            key={`${item.fcstDate}_${item.fcstTime}`}
+            className="flex min-w-20 flex-col items-center gap-1 rounded-xl bg-white/10 px-2 py-3 text-white"
+          >
+            <span className="text-xs text-white/60">
+              {item.fcstTime.slice(0, 2)}:{item.fcstTime.slice(2, 4)}
+            </span>
+            <WeatherIcon pty={item.pty} sky={item.sky ?? 1} className="text-xl" />
+            <span className="text-sm font-medium">{item.temperature}°</span>
+          </div>
+        ))}
       </div>
     </section>
   );

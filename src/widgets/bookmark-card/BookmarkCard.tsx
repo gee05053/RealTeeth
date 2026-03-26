@@ -1,10 +1,11 @@
 import { useState } from 'react';
 
-import { PencilIcon, BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/24/solid';
+import { PencilIcon } from '@heroicons/react/24/solid';
+import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/24/solid';
 import { useNavigate } from 'react-router-dom';
 
 import type { BookmarkType } from '@/entities/bookmark/model/types';
-import { PTY_LABEL, SKY_LABEL } from '@/entities/weather/lib/weatherLabels';
+import WeatherIcon from '@/entities/weather/ui/WeatherIcon';
 import useWeatherQuery from '@/entities/weather/model/queries';
 
 type BookmarkCardProps = {
@@ -26,11 +27,6 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
     setIsEditingAlias(false);
   };
 
-  const conditionLabel = weather
-    ? weather.currentWeather.precipitationType !== 0
-      ? PTY_LABEL[weather.currentWeather.precipitationType]
-      : SKY_LABEL[weather.currentWeather.sky ?? 1]
-    : null;
 
   return (
     <div
@@ -115,7 +111,11 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
             <span className="text-3xl font-light text-white">
               {weather.currentWeather.temperature}°
             </span>
-            <span className="mb-1 text-xs text-white/70">{conditionLabel}</span>
+            <WeatherIcon
+              pty={weather.currentWeather.precipitationType}
+              sky={weather.currentWeather.sky ?? 1}
+              className="mb-1 text-base"
+            />
           </div>
           {weather.daily.minDailyTemperature !== null &&
           weather.daily.maxDailyTemperature !== null ? (
