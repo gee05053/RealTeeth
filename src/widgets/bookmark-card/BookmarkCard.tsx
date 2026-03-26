@@ -30,10 +30,10 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
 
   return (
     <div
-      className="relative flex cursor-pointer flex-col gap-3 rounded-2xl bg-white/10 p-4 backdrop-blur-sm"
+      className="relative flex cursor-pointer flex-col gap-3 rounded-2xl border border-white/40 p-4"
       onClick={() => navigate(`/bookmarks/${encodeURIComponent(bookmark.id)}`)}
     >
-      <div className="flex items-start justify-between gap-1">
+      <div className="flex items-start justify-between gap-1 border-b border-white/10 pb-3">
         {isEditingAlias ? (
           <div className="flex flex-1 items-center gap-3">
             <input
@@ -71,11 +71,9 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
             </div>
           </div>
         ) : (
-          <div className="flex-1">
+          <div className="flex flex-1 flex-col gap-0.5">
             <p className="text-sm font-medium text-white">{bookmark.alias}</p>
-            {bookmark.fullLabel && (
-              <p className="mt-0.5 text-xs text-white/50">{bookmark.fullLabel}</p>
-            )}
+            {bookmark.fullLabel && <p className="text-xs text-white/70">{bookmark.fullLabel}</p>}
           </div>
         )}
 
@@ -104,24 +102,30 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
       </div>
 
       {isLoading ? (
-        <p className="text-xs text-white/50">날씨 불러오는 중...</p>
+        <p className="text-xs text-white/70">날씨 불러오는 중...</p>
       ) : weather ? (
         <div>
           <div className="flex items-end gap-2">
-            <span className="text-3xl font-light text-white">
-              {weather.currentWeather.temperature}°
+            <span className="text-3xl text-white">
+              {weather.currentWeather.temperature.toFixed(0)}°
             </span>
             <WeatherIcon
               pty={weather.currentWeather.precipitationType}
               sky={weather.currentWeather.sky ?? 1}
-              className="mb-1 text-base"
+              className="mb-1 text-xl"
             />
           </div>
           {weather.daily.minDailyTemperature !== null &&
           weather.daily.maxDailyTemperature !== null ? (
-            <div className="mt-1 flex gap-3 text-xs text-white/70">
-              <span>최저 {weather.daily.minDailyTemperature}°</span>
-              <span>최고 {weather.daily.maxDailyTemperature}°</span>
+            <div className="mt-1 flex gap-2 text-xs text-white/70">
+              <span>
+                최고:{' '}
+                <span className="text-white">{weather.daily.maxDailyTemperature.toFixed(0)}°</span>
+              </span>
+              <span>
+                최저:{' '}
+                <span className="text-white">{weather.daily.minDailyTemperature.toFixed(0)}°</span>
+              </span>
             </div>
           ) : null}
         </div>
