@@ -3,8 +3,8 @@ import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/24/solid';
 
 import type { BookmarkType } from '@/entities/bookmark/model/types';
 import { PTY_LABEL, SKY_LABEL } from '@/entities/weather/lib/weatherLabels';
-import WeatherIcon from '@/entities/weather/ui/WeatherIcon';
 import useWeatherQuery from '@/entities/weather/model/queries';
+import WeatherIcon from '@/entities/weather/ui/WeatherIcon';
 import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
 import type { DetectedLocationType } from '@/features/detect-location/hooks/useDetectLocation';
 
@@ -67,30 +67,35 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
       : SKY_LABEL[currentWeather.sky ?? 1];
 
   return (
-    <section className="flex flex-col gap-6 rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
-      <div>
-        <div className="flex items-start justify-between">
-          <p className="text-base text-white/60">{locationLabel}</p>
-          <button className="cursor-pointer p-1" onClick={handleBookmarkToggle}>
-            {isBookmarked ? (
-              <BookmarkSolidIcon className="size-7 text-yellow-300" />
-            ) : (
-              <BookmarkOutlineIcon className="size-7 text-white/60" />
-            )}
-          </button>
-        </div>
-        <div className="mt-2 flex items-end gap-4">
-          <span className="text-7xl font-normal text-white">{currentWeather.temperature}°</span>
-          <span className="text-lg text-white/70">{conditionLabel}</span>
-        </div>
-        <div className="mt-4 text-sm">
+    <section className="flex flex-col gap-7 rounded-2xl bg-white/10 p-7 backdrop-blur-sm">
+      <button className="absolute top-6 right-6 cursor-pointer p-1" onClick={handleBookmarkToggle}>
+        {isBookmarked ? (
+          <BookmarkSolidIcon className="size-6 text-yellow-300" />
+        ) : (
+          <BookmarkOutlineIcon className="size-6 text-white/80" />
+        )}
+      </button>
+      <div className="flex flex-col items-center gap-2 text-white">
+        <p className="text-lg">{locationLabel}</p>
+        <span className="relative text-5xl">
+          {currentWeather.temperature.toFixed(0)}
+          <span className="absolute text-2xl">°</span>
+        </span>
+        <span className="text-base text-white/80">{conditionLabel}</span>
+        <div className="mt-1">
           {daily.minDailyTemperature !== null && daily.maxDailyTemperature !== null ? (
-            <div className="flex flex-wrap gap-x-4 text-white/70">
+            <div className="flex flex-wrap gap-x-2 text-sm text-white/70">
               <span>
-                최저 <span className="font-normal text-white">{daily.minDailyTemperature}°</span>
+                최고:{' '}
+                <span className="font-medium text-white">
+                  {daily.maxDailyTemperature.toFixed(0)}°
+                </span>
               </span>
               <span>
-                최고 <span className="font-normal text-white">{daily.maxDailyTemperature}°</span>
+                최저:{' '}
+                <span className="font-medium text-white">
+                  {daily.minDailyTemperature.toFixed(0)}°
+                </span>
               </span>
             </div>
           ) : (
@@ -98,8 +103,7 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
           )}
         </div>
       </div>
-
-      <div className="flex gap-3 overflow-x-auto pb-2">
+      <div className="flex gap-3 overflow-x-auto">
         {hourly.map(item => (
           <div
             key={`${item.fcstDate}_${item.fcstTime}`}
