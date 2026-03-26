@@ -67,8 +67,8 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
       : SKY_LABEL[currentWeather.sky ?? 1];
 
   return (
-    <section className="flex flex-col gap-7 rounded-2xl bg-white/10 p-7 backdrop-blur-sm">
-      <button className="absolute top-6 right-6 cursor-pointer p-1" onClick={handleBookmarkToggle}>
+    <section className="flex flex-col gap-6 rounded-2xl bg-white/10 px-5 py-7 backdrop-blur-sm">
+      <button className="absolute top-6 right-5 cursor-pointer p-1" onClick={handleBookmarkToggle}>
         {isBookmarked ? (
           <BookmarkSolidIcon className="size-6 text-yellow-300" />
         ) : (
@@ -107,13 +107,13 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
         {hourly.map(item => (
           <div
             key={`${item.fcstDate}_${item.fcstTime}`}
-            className="flex min-w-20 flex-col items-center gap-1 rounded-xl bg-white/10 px-2 py-3 text-white"
+            className="flex min-w-12 flex-col items-center gap-1 py-2 text-white"
           >
             <span className="text-xs text-white/60">
               {item.fcstTime.slice(0, 2)}:{item.fcstTime.slice(2, 4)}
             </span>
             <WeatherIcon pty={item.pty} sky={item.sky ?? 1} className="text-xl" />
-            <span className="text-sm font-medium">{item.temperature}°</span>
+            <span className="text-base font-medium">{item.temperature.toFixed(0)}°</span>
           </div>
         ))}
       </div>
