@@ -1,5 +1,6 @@
 import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
-import BookmarkCard from '@/widgets/bookmark-card/BookmarkCard';
+
+import BookmarkCard from './BookmarkCard';
 
 const BookmarkList = () => {
   const { bookmarks, removeBookmark, updateBookmarkAlias } = useBookmarks();
