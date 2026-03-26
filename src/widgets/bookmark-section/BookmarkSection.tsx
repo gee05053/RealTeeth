@@ -2,7 +2,7 @@ import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
 
 import BookmarkCard from './BookmarkCard';
 
-const BookmarkList = () => {
+const BookmarkSection = () => {
   const { bookmarks, removeBookmark, updateBookmarkAlias } = useBookmarks();
 
   return (
@@ -26,4 +26,4 @@ const BookmarkList = () => {
   );
 };
 
-export default BookmarkList;
+export default BookmarkSection;

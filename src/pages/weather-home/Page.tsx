@@ -6,7 +6,7 @@ import useDetectLocation, {
   type DetectedLocationType,
 } from '@/features/detect-location/hooks/useDetectLocation';
 import PageContainer from '@/shared/ui/page-container/PageContainer';
-import BookmarkList from '@/widgets/bookmark-list/BookmarkList';
+import BookmarkSection from '@/widgets/bookmark-section/BookmarkSection';
 import LocationSearch from '@/widgets/location-search/LocationSearch';
 import WeatherInfo from '@/widgets/weather-info/WeatherInfo';
 
@@ -41,7 +41,7 @@ const WeatherHomePage = () => {
       ) : (
         <>
           <WeatherInfo activeLocation={activeLocation as DetectedLocationType} />
-          <BookmarkList />
+          <BookmarkSection />
         </>
       )}
     </PageContainer>
