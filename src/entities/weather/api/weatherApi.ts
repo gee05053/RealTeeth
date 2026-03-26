@@ -180,21 +180,20 @@ const fetchWeatherInfo = async (nx: number, ny: number): Promise<WeatherInfoType
     }
   }
 
-  // 내일 날짜의 (현재 시각 - 1시간) 정시를 끝으로, 역으로 24개 정시 슬롯만 사용
-  const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
-  const endSlot = new Date(
+  const currentHour = new Date(
     now.getFullYear(),
     now.getMonth(),
-    now.getDate() + 1,
-    oneHourAgo.getHours(),
+    now.getDate(),
+    now.getHours(),
     0,
     0,
     0
   );
-  const startSlot = new Date(endSlot.getTime() - 23 * 60 * 60 * 1000);
   const allowedHourlyKeys = new Set<string>();
+
+  // 현재 시각 + 1시간 정시를 시작으로, 24개 정시 슬롯만 사용
   for (let i = 1; i < 25; i++) {
-    const t = new Date(startSlot.getTime() + i * 60 * 60 * 1000);
+    const t = new Date(currentHour.getTime() + i * 60 * 60 * 1000);
     allowedHourlyKeys.add(`${formatDate(t)}_${formatHour(t.getHours())}`);
   }
 
