@@ -7,6 +7,7 @@ import useWeatherQuery from '@/entities/weather/model/queries';
 import HourlyForecastRow from '@/entities/weather/ui/HourlyForecastRow';
 import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
 import type { DetectedLocationType } from '@/features/detect-location/hooks/useDetectLocation';
+import IconButton from '@/shared/ui/button/IconButton';
 import Card from '@/shared/ui/card/Card';
 
 type WeatherInfoProps = {
@@ -67,13 +68,13 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
 
   return (
     <Card className="relative" classNames={{ content: 'flex flex-col gap-4' }}>
-      <button className="absolute top-6 right-5 cursor-pointer p-1" onClick={handleBookmarkToggle}>
+      <IconButton className="absolute top-5 right-5 size-10" onClick={handleBookmarkToggle}>
         {isBookmarked ? (
           <BookmarkSolidIcon className="size-6 text-yellow-300" />
         ) : (
-          <BookmarkOutlineIcon className="size-6 text-white/80" />
+          <BookmarkOutlineIcon className="size-6" />
         )}
-      </button>
+      </IconButton>
       <div className="flex flex-col items-center gap-2">
         <p className="text-lg">{locationLabel}</p>
         <span className="relative text-5xl">

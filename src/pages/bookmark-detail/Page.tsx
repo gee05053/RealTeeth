@@ -2,13 +2,13 @@ import { useState } from 'react';
 
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { ArrowLeftIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { PencilIcon } from '@heroicons/react/24/solid';
+import { ArrowLeftIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 import { PTY_LABEL, SKY_LABEL } from '@/entities/weather/lib/weatherLabels';
 import useWeatherQuery from '@/entities/weather/model/queries';
 import HourlyForecastRow from '@/entities/weather/ui/HourlyForecastRow';
 import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
+import IconButton from '@/shared/ui/button/IconButton';
 import Card from '@/shared/ui/card/Card';
 import PageContainer from '@/shared/ui/page-container/PageContainer';
 
@@ -65,18 +65,12 @@ const BookmarkDetailPage = () => {
   return (
     <PageContainer>
       <div className="flex items-center justify-between">
-        <button
-          className="cursor-pointer p-1 text-white/70 hover:text-white"
-          onClick={() => navigate('/')}
-        >
-          <ArrowLeftIcon className="size-5" />
-        </button>
-        <button
-          className="cursor-pointer p-1 text-white/50 hover:text-white/80"
-          onClick={handleRemove}
-        >
-          <TrashIcon className="size-5" />
-        </button>
+        <IconButton className="size-10" onClick={() => navigate('/')}>
+          <ArrowLeftIcon className="size-6" />
+        </IconButton>
+        <IconButton className="size-10" onClick={handleRemove}>
+          <TrashIcon className="size-6 text-red-500/50 hover:text-red-500" />
+        </IconButton>
       </div>
 
       <Card
@@ -110,14 +104,11 @@ const BookmarkDetailPage = () => {
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <p className="truncate">{bookmark!.alias}</p>
-              <button
-                className="cursor-pointer p-1 text-white/40 hover:text-white/70"
-                onClick={() => setIsEditingAlias(true)}
-              >
+              <IconButton onClick={() => setIsEditingAlias(true)}>
                 <PencilIcon className="size-4" />
-              </button>
+              </IconButton>
             </div>
           )
         }

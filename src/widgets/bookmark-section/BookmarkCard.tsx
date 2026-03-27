@@ -2,12 +2,12 @@ import { useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { PencilIcon } from '@heroicons/react/24/solid';
-import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/24/solid';
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 import type { BookmarkType } from '@/entities/bookmark/model/types';
 import useWeatherQuery from '@/entities/weather/model/queries';
 import WeatherIcon from '@/entities/weather/ui/WeatherIcon';
+import IconButton from '@/shared/ui/button/IconButton';
 import Card from '@/shared/ui/card/Card';
 
 type BookmarkCardProps = {
@@ -78,27 +78,26 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
           ) : (
             <p className="truncate">{bookmark.alias}</p>
           )}
-          <div className="flex shrink-0 items-center gap-1">
+          <div className="flex shrink-0 items-center gap-1.5">
             {!isEditingAlias && (
-              <button
-                className="cursor-pointer p-1"
+              <IconButton
                 onClick={e => {
                   e.stopPropagation();
                   setIsEditingAlias(true);
                 }}
               >
-                <PencilIcon className="size-3.5 text-white/40 hover:text-white/70" />
-              </button>
+                <PencilIcon className="size-4" />
+              </IconButton>
             )}
-            <button
-              className="cursor-pointer p-1"
+            <IconButton
+              className="text-red-500/50 hover:text-red-500"
               onClick={e => {
                 e.stopPropagation();
                 onRemoveBookmark(bookmark.id);
               }}
             >
-              <BookmarkSolidIcon className="size-3.5 text-yellow-300" />
-            </button>
+              <TrashIcon className="size-4" />
+            </IconButton>
           </div>
         </div>
       }
