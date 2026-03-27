@@ -1,8 +1,14 @@
 import { useState } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import { CheckIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import {
+  CheckIcon,
+  ChevronRightIcon,
+  PencilIcon,
+  TrashIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline';
 
 import type { BookmarkType } from '@/entities/bookmark/model/types';
 import useWeatherQuery from '@/entities/weather/model/queries';
@@ -18,7 +24,6 @@ type BookmarkCardProps = {
 };
 
 const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: BookmarkCardProps) => {
-  const navigate = useNavigate();
   const [isEditingAlias, setIsEditingAlias] = useState(false);
   const [aliasInput, setAliasInput] = useState(bookmark.alias);
 
@@ -47,7 +52,6 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
               autoFocus
               value={aliasInput}
               onChange={e => setAliasInput(e.target.value)}
-              onClick={e => e.stopPropagation()}
               onKeyDown={e => {
                 if (e.key === 'Enter') handleSaveAlias();
                 if (e.key === 'Escape') setIsEditingAlias(false);
@@ -59,17 +63,11 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
           <div className="flex shrink-0 items-center gap-1.5">
             {isEditingAlias ? (
               <>
-                <IconButton
-                  onClick={e => {
-                    e.stopPropagation();
-                    handleSaveAlias();
-                  }}
-                >
+                <IconButton onClick={handleSaveAlias}>
                   <CheckIcon className="size-4" />
                 </IconButton>
                 <IconButton
-                  onClick={e => {
-                    e.stopPropagation();
+                  onClick={() => {
                     setAliasInput(bookmark.alias);
                     setIsEditingAlias(false);
                   }}
@@ -79,20 +77,12 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
               </>
             ) : (
               <>
-                <IconButton
-                  onClick={e => {
-                    e.stopPropagation();
-                    setIsEditingAlias(true);
-                  }}
-                >
+                <IconButton onClick={() => setIsEditingAlias(true)}>
                   <PencilIcon className="size-4" />
                 </IconButton>
                 <IconButton
                   className="text-red-500/50 hover:text-red-500"
-                  onClick={e => {
-                    e.stopPropagation();
-                    onRemoveBookmark(bookmark.id);
-                  }}
+                  onClick={() => onRemoveBookmark(bookmark.id)}
                 >
                   <TrashIcon className="size-4" />
                 </IconButton>
@@ -102,7 +92,15 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
         </div>
       }
       description={bookmark.fullLabel}
-      onClick={() => navigate(`/bookmarks/${encodeURIComponent(bookmark.id)}`)}
+      footer={
+        <Link
+          className="flex items-center justify-end gap-0.5 text-xs text-white/80 hover:text-white hover:underline hover:underline-offset-4"
+          to={`/bookmarks/${encodeURIComponent(bookmark.id)}`}
+        >
+          <span>상세 보기</span>
+          <ChevronRightIcon className="size-3.5 shrink-0" aria-hidden />
+        </Link>
+      }
     >
       {isLoading ? (
         <InlineMessage className="text-xs">날씨 불러오는 중...</InlineMessage>
@@ -133,7 +131,9 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
             </div>
           ) : null}
         </div>
-      ) : null}
+      ) : (
+        <InlineMessage className="text-xs">날씨 정보를 불러올 수 없어요.</InlineMessage>
+      )}
     </Card>
   );
 };

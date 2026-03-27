@@ -8,11 +8,21 @@ type CardProps = Omit<ComponentProps<'div'>, 'title' | 'description'> & {
     title?: string;
     description?: string;
     content?: string;
+    footer?: string;
   };
   title?: ReactNode;
   description?: ReactNode;
+  footer?: ReactNode;
 };
-const Card = ({ className, classNames, title, description, children, ...restProps }: CardProps) => {
+const Card = ({
+  className,
+  classNames,
+  title,
+  description,
+  children,
+  footer,
+  ...restProps
+}: CardProps) => {
   return (
     <div
       className={cn('flex flex-col gap-4 rounded-2xl bg-white/10 p-6 backdrop-blur-sm', className)}
@@ -29,6 +39,7 @@ const Card = ({ className, classNames, title, description, children, ...restProp
         </div>
       )}
       <div className={classNames?.content}>{children}</div>
+      <div className={classNames?.footer}>{footer}</div>
     </div>
   );
 };
