@@ -7,11 +7,11 @@ type HourlyForecastRowProps = {
 
 const HourlyForecastRow = ({ hourlyForecast }: HourlyForecastRowProps) => {
   return (
-    <div className="flex gap-3 overflow-x-auto">
+    <div className="flex gap-3 overflow-x-auto py-2">
       {hourlyForecast.map(forecast => (
         <div
           key={`${forecast.fcstDate}_${forecast.fcstTime}`}
-          className="flex min-w-12 flex-col items-center gap-1 py-2 text-white"
+          className="flex min-w-12 flex-col items-center gap-1 text-white"
         >
           <span className="text-xs text-white/60">
             {forecast.fcstTime.slice(0, 2)}:{forecast.fcstTime.slice(2, 4)}

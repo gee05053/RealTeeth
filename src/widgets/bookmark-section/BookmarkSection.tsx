@@ -1,4 +1,5 @@
 import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
+import Card from '@/shared/ui/card/Card';
 
 import BookmarkCard from './BookmarkCard';
 
@@ -6,23 +7,20 @@ const BookmarkSection = () => {
   const { bookmarks, removeBookmark, updateBookmarkAlias } = useBookmarks();
 
   return (
-    <section className="flex flex-col rounded-2xl bg-white/10 px-5 py-7 backdrop-blur-sm">
-      <h3 className="mb-3 text-base font-medium text-white/90">북마크</h3>
+    <Card title="북마크" classNames={{ content: 'grid grid-cols-3 gap-3' }}>
       {bookmarks.length > 0 ? (
-        <div className="grid grid-cols-3 gap-3">
-          {bookmarks.map(bookmark => (
-            <BookmarkCard
-              key={bookmark.id}
-              bookmark={bookmark}
-              onRemoveBookmark={removeBookmark}
-              onUpdateBookmarkAlias={updateBookmarkAlias}
-            />
-          ))}
-        </div>
+        bookmarks.map(bookmark => (
+          <BookmarkCard
+            key={bookmark.id}
+            bookmark={bookmark}
+            onRemoveBookmark={removeBookmark}
+            onUpdateBookmarkAlias={updateBookmarkAlias}
+          />
+        ))
       ) : (
-        <p className="text-sm text-white/40">현재 추가된 북마크가 없어요.</p>
+        <p className="text-sm text-white/70">현재 추가된 북마크가 없어요.</p>
       )}
-    </section>
+    </Card>
   );
 };
 

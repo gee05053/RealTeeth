@@ -7,6 +7,7 @@ import useWeatherQuery from '@/entities/weather/model/queries';
 import HourlyForecastRow from '@/entities/weather/ui/HourlyForecastRow';
 import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
 import type { DetectedLocationType } from '@/features/detect-location/hooks/useDetectLocation';
+import Card from '@/shared/ui/card/Card';
 
 type WeatherInfoProps = {
   activeLocation: DetectedLocationType;
@@ -52,11 +53,9 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
 
   if (weatherStatusMessage)
     return (
-      <section className="flex flex-col gap-6 rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
-        <div className="flex flex-1 items-center justify-center">
-          <p className="text-white/70">{weatherStatusMessage}</p>
-        </div>
-      </section>
+      <Card classNames={{ content: 'flex justify-center' }}>
+        <p className="text-white/70">{weatherStatusMessage}</p>
+      </Card>
     );
 
   const { currentWeather, daily, hourly } = weather!;
@@ -67,7 +66,7 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
       : SKY_LABEL[currentWeather.sky ?? 1];
 
   return (
-    <section className="flex flex-col gap-6 rounded-2xl bg-white/10 px-5 py-7 backdrop-blur-sm">
+    <Card className="relative" classNames={{ content: 'flex flex-col gap-4' }}>
       <button className="absolute top-6 right-5 cursor-pointer p-1" onClick={handleBookmarkToggle}>
         {isBookmarked ? (
           <BookmarkSolidIcon className="size-6 text-yellow-300" />
@@ -75,36 +74,30 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
           <BookmarkOutlineIcon className="size-6 text-white/80" />
         )}
       </button>
-      <div className="flex flex-col items-center gap-2 text-white">
+      <div className="flex flex-col items-center gap-2">
         <p className="text-lg">{locationLabel}</p>
         <span className="relative text-5xl">
           {currentWeather.temperature.toFixed(0)}
           <span className="absolute text-2xl">°</span>
         </span>
-        <span className="text-base text-white/80">{conditionLabel}</span>
-        <div className="mt-1">
-          {daily.minDailyTemperature !== null && daily.maxDailyTemperature !== null ? (
-            <div className="flex flex-wrap gap-x-2 text-sm text-white/70">
-              <span>
-                최고:{' '}
-                <span className="font-medium text-white">
-                  {daily.maxDailyTemperature.toFixed(0)}°
-                </span>
-              </span>
-              <span>
-                최저:{' '}
-                <span className="font-medium text-white">
-                  {daily.minDailyTemperature.toFixed(0)}°
-                </span>
-              </span>
-            </div>
-          ) : (
-            <span className="text-white/70">제공된 최고/최저 기온 데이터가 없어요.</span>
-          )}
-        </div>
+        <span className="text-base text-white/90">{conditionLabel}</span>
+        {daily.minDailyTemperature !== null && daily.maxDailyTemperature !== null ? (
+          <div className="flex gap-2 text-sm">
+            <span>
+              <span className="text-white/80">최고:</span>{' '}
+              <span className="font-medium">{daily.maxDailyTemperature.toFixed(0)}°</span>
+            </span>
+            <span>
+              <span className="text-white/80">최저:</span>{' '}
+              <span className="font-medium">{daily.minDailyTemperature.toFixed(0)}°</span>
+            </span>
+          </div>
+        ) : (
+          <span className="text-sm text-white/70">제공된 최고/최저 기온 데이터가 없어요.</span>
+        )}
       </div>
       <HourlyForecastRow hourlyForecast={hourly} />
-    </section>
+    </Card>
   );
 };
 
