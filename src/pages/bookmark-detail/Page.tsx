@@ -110,7 +110,7 @@ const BookmarkDetailPage = () => {
                 </IconButton>
               </div>
               <IconButton
-                className="size-10 text-red-500/70 hover:text-red-500"
+                className="size-10 text-red-200 hover:bg-red-500/20 hover:text-red-50 active:bg-red-500/30"
                 onClick={handleRemove}
               >
                 <TrashIcon className="size-6" />
