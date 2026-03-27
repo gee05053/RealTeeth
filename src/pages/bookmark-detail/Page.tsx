@@ -2,7 +2,13 @@ import { useState } from 'react';
 
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { ArrowLeftIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowLeftIcon,
+  CheckIcon,
+  PencilIcon,
+  TrashIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline';
 
 import { PTY_LABEL, SKY_LABEL } from '@/entities/weather/lib/weatherLabels';
 import useWeatherQuery from '@/entities/weather/model/queries';
@@ -64,14 +70,9 @@ const BookmarkDetailPage = () => {
 
   return (
     <PageContainer>
-      <div className="flex items-center justify-between">
-        <IconButton className="size-10" onClick={() => navigate('/')}>
-          <ArrowLeftIcon className="size-6" />
-        </IconButton>
-        <IconButton className="size-10" onClick={handleRemove}>
-          <TrashIcon className="size-6 text-red-500/50 hover:text-red-500" />
-        </IconButton>
-      </div>
+      <IconButton className="size-10" onClick={() => navigate('/')}>
+        <ArrowLeftIcon className="size-6" />
+      </IconButton>
 
       <Card
         className="relative"
@@ -87,27 +88,31 @@ const BookmarkDetailPage = () => {
                 onChange={e => setAliasInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleSaveAlias()}
               />
-              <button
-                className="cursor-pointer px-2 py-1 text-sm text-white/70 hover:text-white"
-                onClick={handleSaveAlias}
-              >
-                저장
-              </button>
-              <button
-                className="cursor-pointer px-2 py-1 text-sm text-white/50 hover:text-white/70"
+              <IconButton onClick={handleSaveAlias}>
+                <CheckIcon className="size-4" />
+              </IconButton>
+              <IconButton
                 onClick={() => {
                   setAliasInput(bookmark!.alias);
                   setIsEditingAlias(false);
                 }}
               >
-                취소
-              </button>
+                <XMarkIcon className="size-4" />
+              </IconButton>
             </div>
           ) : (
-            <div className="flex items-center gap-3">
-              <p className="truncate">{bookmark!.alias}</p>
-              <IconButton onClick={() => setIsEditingAlias(true)}>
-                <PencilIcon className="size-4" />
+            <div className="flex justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <p className="truncate">{bookmark!.alias}</p>
+                <IconButton onClick={() => setIsEditingAlias(true)}>
+                  <PencilIcon className="size-4" />
+                </IconButton>
+              </div>
+              <IconButton
+                className="size-10 text-red-500/70 hover:text-red-500"
+                onClick={handleRemove}
+              >
+                <TrashIcon className="size-6" />
               </IconButton>
             </div>
           )

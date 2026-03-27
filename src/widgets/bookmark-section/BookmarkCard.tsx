@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 import type { BookmarkType } from '@/entities/bookmark/model/types';
 import useWeatherQuery from '@/entities/weather/model/queries';
@@ -38,66 +38,65 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
         description: 'text-xs',
       }}
       title={
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center justify-between gap-3">
           {isEditingAlias ? (
-            <div className="flex items-center gap-3">
-              <input
-                type="text"
-                className="w-full flex-1 rounded-lg bg-white/20 px-2 py-1 text-sm outline-none"
-                autoFocus
-                value={aliasInput}
-                onChange={e => setAliasInput(e.target.value)}
-                onClick={e => e.stopPropagation()}
-                onKeyDown={e => {
-                  if (e.key === 'Enter') handleSaveAlias();
-                  if (e.key === 'Escape') setIsEditingAlias(false);
-                }}
-              />
-              <div className="flex gap-3">
-                <button
-                  className="flex-1 cursor-pointer px-2 py-1 text-xs text-white/70 hover:text-white"
+            <input
+              type="text"
+              className="flex-1 rounded-lg bg-white/20 px-2 py-1 text-sm outline-none"
+              autoFocus
+              value={aliasInput}
+              onChange={e => setAliasInput(e.target.value)}
+              onClick={e => e.stopPropagation()}
+              onKeyDown={e => {
+                if (e.key === 'Enter') handleSaveAlias();
+                if (e.key === 'Escape') setIsEditingAlias(false);
+              }}
+            />
+          ) : (
+            <p className="truncate">{bookmark.alias}</p>
+          )}
+          <div className="flex shrink-0 items-center gap-1.5">
+            {isEditingAlias ? (
+              <>
+                <IconButton
                   onClick={e => {
                     e.stopPropagation();
                     handleSaveAlias();
                   }}
                 >
-                  저장
-                </button>
-                <button
-                  className="flex-1 cursor-pointer px-2 py-1 text-xs text-white/40 hover:text-white/60"
+                  <CheckIcon className="size-4" />
+                </IconButton>
+                <IconButton
                   onClick={e => {
                     e.stopPropagation();
                     setAliasInput(bookmark.alias);
                     setIsEditingAlias(false);
                   }}
                 >
-                  취소
-                </button>
-              </div>
-            </div>
-          ) : (
-            <p className="truncate">{bookmark.alias}</p>
-          )}
-          <div className="flex shrink-0 items-center gap-1.5">
-            {!isEditingAlias && (
-              <IconButton
-                onClick={e => {
-                  e.stopPropagation();
-                  setIsEditingAlias(true);
-                }}
-              >
-                <PencilIcon className="size-4" />
-              </IconButton>
+                  <XMarkIcon className="size-4" />
+                </IconButton>
+              </>
+            ) : (
+              <>
+                <IconButton
+                  onClick={e => {
+                    e.stopPropagation();
+                    setIsEditingAlias(true);
+                  }}
+                >
+                  <PencilIcon className="size-4" />
+                </IconButton>
+                <IconButton
+                  className="text-red-500/50 hover:text-red-500"
+                  onClick={e => {
+                    e.stopPropagation();
+                    onRemoveBookmark(bookmark.id);
+                  }}
+                >
+                  <TrashIcon className="size-4" />
+                </IconButton>
+              </>
             )}
-            <IconButton
-              className="text-red-500/50 hover:text-red-500"
-              onClick={e => {
-                e.stopPropagation();
-                onRemoveBookmark(bookmark.id);
-              }}
-            >
-              <TrashIcon className="size-4" />
-            </IconButton>
           </div>
         </div>
       }
