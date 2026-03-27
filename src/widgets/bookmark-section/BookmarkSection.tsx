@@ -1,5 +1,6 @@
 import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
 import Card from '@/shared/ui/card/Card';
+import InlineMessage from '@/shared/ui/inline-status-message/InlineStatusMessage';
 
 import BookmarkCard from './BookmarkCard';
 
@@ -18,7 +19,9 @@ const BookmarkSection = () => {
           />
         ))
       ) : (
-        <p className="text-sm text-white/70">현재 추가된 북마크가 없어요.</p>
+        <InlineMessage className="col-span-full text-center">
+          현재 추가된 북마크가 없어요.
+        </InlineMessage>
       )}
     </Card>
   );

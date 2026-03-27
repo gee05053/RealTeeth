@@ -9,6 +9,7 @@ import useWeatherQuery from '@/entities/weather/model/queries';
 import WeatherIcon from '@/entities/weather/ui/WeatherIcon';
 import IconButton from '@/shared/ui/button/IconButton';
 import Card from '@/shared/ui/card/Card';
+import InlineMessage from '@/shared/ui/inline-status-message/InlineStatusMessage';
 
 type BookmarkCardProps = {
   bookmark: BookmarkType;
@@ -104,7 +105,7 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
       onClick={() => navigate(`/bookmarks/${encodeURIComponent(bookmark.id)}`)}
     >
       {isLoading ? (
-        <p className="text-xs text-white/70">날씨 불러오는 중...</p>
+        <InlineMessage className="text-xs">날씨 불러오는 중...</InlineMessage>
       ) : weather ? (
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-4">

@@ -16,6 +16,7 @@ import HourlyForecastRow from '@/entities/weather/ui/HourlyForecastRow';
 import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
 import IconButton from '@/shared/ui/button/IconButton';
 import Card from '@/shared/ui/card/Card';
+import InlineMessage from '@/shared/ui/inline-status-message/InlineStatusMessage';
 import PageContainer from '@/shared/ui/page-container/PageContainer';
 
 const BookmarkDetailPage = () => {
@@ -58,7 +59,7 @@ const BookmarkDetailPage = () => {
   if (statusMessage)
     return (
       <Card classNames={{ content: 'flex justify-center' }}>
-        <p className="text-white/70">{statusMessage}</p>
+        <InlineMessage>{statusMessage}</InlineMessage>
       </Card>
     );
 
@@ -139,7 +140,9 @@ const BookmarkDetailPage = () => {
               </span>
             </div>
           ) : (
-            <span className="text-sm text-white/70">제공된 최고/최저 기온 데이터가 없어요.</span>
+            <InlineMessage className="text-sm">
+              제공된 최고/최저 기온 데이터가 없어요.
+            </InlineMessage>
           )}
         </div>
         <HourlyForecastRow hourlyForecast={hourly} />

@@ -9,6 +9,7 @@ import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
 import type { DetectedLocationType } from '@/features/detect-location/hooks/useDetectLocation';
 import IconButton from '@/shared/ui/button/IconButton';
 import Card from '@/shared/ui/card/Card';
+import InlineMessage from '@/shared/ui/inline-status-message/InlineStatusMessage';
 
 type WeatherInfoProps = {
   activeLocation: DetectedLocationType;
@@ -55,7 +56,7 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
   if (weatherStatusMessage)
     return (
       <Card classNames={{ content: 'flex justify-center' }}>
-        <p className="text-white/70">{weatherStatusMessage}</p>
+        <InlineMessage>{weatherStatusMessage}</InlineMessage>
       </Card>
     );
 
@@ -94,7 +95,7 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
             </span>
           </div>
         ) : (
-          <span className="text-sm text-white/70">제공된 최고/최저 기온 데이터가 없어요.</span>
+          <InlineMessage className="text-sm">제공된 최고/최저 기온 데이터가 없어요.</InlineMessage>
         )}
       </div>
       <HourlyForecastRow hourlyForecast={hourly} />
