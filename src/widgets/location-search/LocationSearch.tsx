@@ -1,5 +1,7 @@
 import { type KeyboardEvent, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+
 import getGeocodeToAddress from '@/entities/location/api/getGeocodeAddress';
 import searchDistricts, { type SearchResultType } from '@/entities/location/lib/searchDistricts';
 import type { GeocodedLocationType } from '@/entities/location/model/types';
@@ -118,16 +120,19 @@ const LocationSearch = ({ onRequestSelectedLocation }: LocationSearchProps) => {
 
   return (
     <div ref={containerRef} className="relative">
-      <input
-        type="text"
-        className="w-full rounded-xl bg-white/20 px-4 py-3 text-white placeholder-white/40 backdrop-blur-sm outline-none focus:bg-white/30 disabled:opacity-50"
-        disabled={isGeocoding}
-        placeholder="지역을 검색하세요"
-        value={inputSearchValue}
-        onChange={e => setInputSearchValue(e.target.value)}
-        onFocus={() => setIsOpenSearchResults(searchResults.length > 0)}
-        onKeyDown={handleInputKeyDown}
-      />
+      <div className="relative">
+        <input
+          type="text"
+          className="peer w-full rounded-xl bg-white/20 py-3 pr-4 pl-11 placeholder-white/40 backdrop-blur-sm outline-none focus:bg-white/30 disabled:opacity-50"
+          disabled={isGeocoding}
+          placeholder="지역을 검색하세요"
+          value={inputSearchValue}
+          onChange={e => setInputSearchValue(e.target.value)}
+          onFocus={() => setIsOpenSearchResults(searchResults.length > 0)}
+          onKeyDown={handleInputKeyDown}
+        />
+        <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 left-3 size-5 -translate-y-1/2 text-white/40 peer-disabled:opacity-50" />
+      </div>
       {isOpenSearchResults && (
         <ul className="absolute top-full right-0 left-0 z-10 mt-1 h-96 overflow-auto rounded-xl bg-white/20 backdrop-blur-sm">
           {searchResults.length > 0 ? (
