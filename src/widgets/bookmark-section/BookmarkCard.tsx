@@ -1,39 +1,21 @@
-import { useState } from 'react';
-
 import { Link } from 'react-router-dom';
 
-import {
-  CheckIcon,
-  ChevronRightIcon,
-  PencilIcon,
-  TrashIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline';
+import { ChevronRightIcon } from '@heroicons/react/24/outline';
 
 import type { BookmarkType } from '@/entities/bookmark/model/types';
 import useWeatherQuery from '@/entities/weather/model/queries';
 import WeatherIcon from '@/entities/weather/ui/WeatherIcon';
-import IconButton from '@/shared/ui/button/IconButton';
 import Card from '@/shared/ui/card/Card';
 import InlineMessage from '@/shared/ui/inline-status-message/InlineStatusMessage';
 
+import BookmarkCardHeader from './BookmarkCardHeader';
+
 type BookmarkCardProps = {
   bookmark: BookmarkType;
-  onRemoveBookmark: (id: string) => void;
-  onUpdateBookmarkAlias: (id: string, alias: string) => void;
 };
 
-const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: BookmarkCardProps) => {
-  const [isEditingAlias, setIsEditingAlias] = useState(false);
-  const [aliasInput, setAliasInput] = useState(bookmark.alias);
-
+const BookmarkCard = ({ bookmark }: BookmarkCardProps) => {
   const { data: weather, isLoading } = useWeatherQuery(bookmark.nx, bookmark.ny);
-
-  const handleSaveAlias = () => {
-    const trimmed = aliasInput.trim();
-    if (trimmed) onUpdateBookmarkAlias(bookmark.id, trimmed);
-    setIsEditingAlias(false);
-  };
 
   return (
     <Card
@@ -43,54 +25,7 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
         title: 'text-sm',
         description: 'text-xs',
       }}
-      title={
-        <div className="flex items-center justify-between gap-3">
-          {isEditingAlias ? (
-            <input
-              type="text"
-              className="flex-1 rounded-lg bg-white/20 px-2 py-1 text-sm outline-none"
-              autoFocus
-              value={aliasInput}
-              onChange={e => setAliasInput(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === 'Enter') handleSaveAlias();
-                if (e.key === 'Escape') setIsEditingAlias(false);
-              }}
-            />
-          ) : (
-            <p className="truncate">{bookmark.alias}</p>
-          )}
-          <div className="flex shrink-0 items-center gap-1.5">
-            {isEditingAlias ? (
-              <>
-                <IconButton onClick={handleSaveAlias}>
-                  <CheckIcon className="size-4" />
-                </IconButton>
-                <IconButton
-                  onClick={() => {
-                    setAliasInput(bookmark.alias);
-                    setIsEditingAlias(false);
-                  }}
-                >
-                  <XMarkIcon className="size-4" />
-                </IconButton>
-              </>
-            ) : (
-              <>
-                <IconButton onClick={() => setIsEditingAlias(true)}>
-                  <PencilIcon className="size-4" />
-                </IconButton>
-                <IconButton
-                  className="text-red-500/50 hover:text-red-500"
-                  onClick={() => onRemoveBookmark(bookmark.id)}
-                >
-                  <TrashIcon className="size-4" />
-                </IconButton>
-              </>
-            )}
-          </div>
-        </div>
-      }
+      title={<BookmarkCardHeader bookmark={bookmark} />}
       description={bookmark.fullLabel}
       footer={
         <Link
