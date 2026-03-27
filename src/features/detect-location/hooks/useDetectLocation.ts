@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import { type GeocodedLocationType } from '@/entities/location/model/types';
 import { latLonToGrid } from '@/entities/location/lib/convertToGrid';
 import useRegionFromCoordQuery from '@/entities/location/model/queries';
+import { type GeocodedLocationType } from '@/entities/location/model/types';
 
 export type DetectedLocationType = GeocodedLocationType & {
   label: string;

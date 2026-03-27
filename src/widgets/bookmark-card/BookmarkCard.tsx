@@ -1,12 +1,13 @@
 import { useState } from 'react';
 
-import { PencilIcon } from '@heroicons/react/24/solid';
-import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/24/solid';
 import { useNavigate } from 'react-router-dom';
 
+import { PencilIcon } from '@heroicons/react/24/solid';
+import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/24/solid';
+
 import type { BookmarkType } from '@/entities/bookmark/model/types';
-import WeatherIcon from '@/entities/weather/ui/WeatherIcon';
 import useWeatherQuery from '@/entities/weather/model/queries';
+import WeatherIcon from '@/entities/weather/ui/WeatherIcon';
 
 type BookmarkCardProps = {
   bookmark: BookmarkType;
@@ -26,7 +27,6 @@ const BookmarkCard = ({ bookmark, onRemoveBookmark, onUpdateBookmarkAlias }: Boo
     if (trimmed) onUpdateBookmarkAlias(bookmark.id, trimmed);
     setIsEditingAlias(false);
   };
-
 
   return (
     <div

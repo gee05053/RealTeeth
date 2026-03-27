@@ -1,5 +1,5 @@
-import { type GeocodedLocationType } from '@/entities/location/model/types';
 import { latLonToGrid } from '@/entities/location/lib/convertToGrid';
+import { type GeocodedLocationType } from '@/entities/location/model/types';
 import { env } from '@/shared/config/env';
 
 type KakaoAddressDoc = {
