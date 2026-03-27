@@ -7,7 +7,6 @@ import useDetectLocation, {
 } from '@/features/detect-location/hooks/useDetectLocation';
 import Card from '@/shared/ui/card/Card';
 import InlineMessage from '@/shared/ui/inline-status-message/InlineStatusMessage';
-import PageContainer from '@/shared/ui/page-container/PageContainer';
 import BookmarkSection from '@/widgets/bookmark-section/BookmarkSection';
 import LocationSearch from '@/widgets/location-search/LocationSearch';
 import WeatherInfo from '@/widgets/weather-info/WeatherInfo';
@@ -33,7 +32,7 @@ const WeatherHomePage = () => {
       : null;
 
   return (
-    <PageContainer>
+    <>
       <LocationSearch onRequestSelectedLocation={setSearchedLocation} />
       {statusMessage ? (
         <Card classNames={{ content: 'flex justify-center' }}>
@@ -43,7 +42,7 @@ const WeatherHomePage = () => {
         <WeatherInfo activeLocation={activeLocation as DetectedLocationType} />
       )}
       <BookmarkSection />
-    </PageContainer>
+    </>
   );
 };
 

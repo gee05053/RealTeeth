@@ -17,7 +17,6 @@ import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
 import IconButton from '@/shared/ui/button/IconButton';
 import Card from '@/shared/ui/card/Card';
 import InlineMessage from '@/shared/ui/inline-status-message/InlineStatusMessage';
-import PageContainer from '@/shared/ui/page-container/PageContainer';
 
 const BookmarkDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -70,7 +69,7 @@ const BookmarkDetailPage = () => {
       : SKY_LABEL[currentWeather.sky ?? 1];
 
   return (
-    <PageContainer>
+    <>
       <IconButton className="size-10" onClick={() => navigate(-1)}>
         <ArrowLeftIcon className="size-6" />
       </IconButton>
@@ -147,7 +146,7 @@ const BookmarkDetailPage = () => {
         </div>
         <HourlyForecastRow hourlyForecast={hourly} />
       </Card>
-    </PageContainer>
+    </>
   );
 };
 
