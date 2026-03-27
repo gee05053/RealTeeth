@@ -71,7 +71,7 @@ const BookmarkDetailPage = () => {
 
   return (
     <PageContainer>
-      <IconButton className="size-10" onClick={() => navigate('/')}>
+      <IconButton className="size-10" onClick={() => navigate(-1)}>
         <ArrowLeftIcon className="size-6" />
       </IconButton>
 
