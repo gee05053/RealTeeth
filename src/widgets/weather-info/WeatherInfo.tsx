@@ -4,7 +4,7 @@ import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/24/solid';
 import type { BookmarkType } from '@/entities/bookmark/model/types';
 import { PTY_LABEL, SKY_LABEL } from '@/entities/weather/lib/weatherLabels';
 import useWeatherQuery from '@/entities/weather/model/queries';
-import WeatherIcon from '@/entities/weather/ui/WeatherIcon';
+import HourlyForecastRow from '@/entities/weather/ui/HourlyForecastRow';
 import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
 import type { DetectedLocationType } from '@/features/detect-location/hooks/useDetectLocation';
 
@@ -103,20 +103,7 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
           )}
         </div>
       </div>
-      <div className="flex gap-3 overflow-x-auto">
-        {hourly.map(item => (
-          <div
-            key={`${item.fcstDate}_${item.fcstTime}`}
-            className="flex min-w-12 flex-col items-center gap-1 py-2 text-white"
-          >
-            <span className="text-xs text-white/60">
-              {item.fcstTime.slice(0, 2)}:{item.fcstTime.slice(2, 4)}
-            </span>
-            <WeatherIcon pty={item.pty} sky={item.sky ?? 1} className="text-xl" />
-            <span className="text-base font-medium">{item.temperature.toFixed(0)}°</span>
-          </div>
-        ))}
-      </div>
+      <HourlyForecastRow hourlyForecast={hourly} />
     </section>
   );
 };

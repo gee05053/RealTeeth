@@ -7,7 +7,7 @@ import { PencilIcon } from '@heroicons/react/24/solid';
 
 import { PTY_LABEL, SKY_LABEL } from '@/entities/weather/lib/weatherLabels';
 import useWeatherQuery from '@/entities/weather/model/queries';
-import WeatherIcon from '@/entities/weather/ui/WeatherIcon';
+import HourlyForecastRow from '@/entities/weather/ui/HourlyForecastRow';
 import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
 import PageContainer from '@/shared/ui/page-container/PageContainer';
 
@@ -144,21 +144,7 @@ const BookmarkDetailPage = () => {
               )}
             </div>
           </div>
-
-          <div className="flex gap-3 overflow-x-auto pb-2">
-            {hourly.map(item => (
-              <div
-                key={`${item.fcstDate}_${item.fcstTime}`}
-                className="flex min-w-20 flex-col items-center gap-1 rounded-xl bg-white/10 px-2 py-3 text-white"
-              >
-                <span className="text-xs text-white/60">
-                  {item.fcstTime.slice(0, 2)}:{item.fcstTime.slice(2, 4)}
-                </span>
-                <WeatherIcon pty={item.pty} sky={item.sky ?? 1} className="text-xl" />
-                <span className="text-sm font-medium">{item.temperature}°</span>
-              </div>
-            ))}
-          </div>
+          <HourlyForecastRow hourlyForecast={hourly} />
         </section>
       </>
     </PageContainer>
