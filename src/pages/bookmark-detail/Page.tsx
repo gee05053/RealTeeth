@@ -10,7 +10,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 
-import { PTY_LABEL, SKY_LABEL } from '@/entities/weather/lib/weatherLabels';
+import { getCurrentWeatherConditionLabel } from '@/entities/weather/lib/weatherLabels';
 import useWeatherQuery from '@/entities/weather/model/queries';
 import HourlyForecastRow from '@/entities/weather/ui/HourlyForecastRow';
 import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
@@ -63,10 +63,6 @@ const BookmarkDetailPage = () => {
     );
 
   const { currentWeather, daily, hourly } = weather!;
-  const conditionLabel =
-    currentWeather.precipitationType !== 0
-      ? PTY_LABEL[currentWeather.precipitationType]
-      : SKY_LABEL[currentWeather.sky ?? 1];
 
   return (
     <>
@@ -125,7 +121,9 @@ const BookmarkDetailPage = () => {
               {currentWeather.temperature.toFixed(0)}
               <span className="absolute text-2xl">°</span>
             </span>
-            <span className="text-base text-white/90">{conditionLabel}</span>
+            <span className="text-base text-white/90">
+              {getCurrentWeatherConditionLabel(currentWeather)}
+            </span>
           </div>
           {daily.minDailyTemperature !== null && daily.maxDailyTemperature !== null ? (
             <div className="flex gap-2 text-sm">

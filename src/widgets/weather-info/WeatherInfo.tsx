@@ -2,7 +2,7 @@ import { BookmarkIcon as BookmarkOutlineIcon } from '@heroicons/react/24/outline
 import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/24/solid';
 
 import type { BookmarkType } from '@/entities/bookmark/model/types';
-import { PTY_LABEL, SKY_LABEL } from '@/entities/weather/lib/weatherLabels';
+import { getCurrentWeatherConditionLabel } from '@/entities/weather/lib/weatherLabels';
 import useWeatherQuery from '@/entities/weather/model/queries';
 import HourlyForecastRow from '@/entities/weather/ui/HourlyForecastRow';
 import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
@@ -62,11 +62,6 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
 
   const { currentWeather, daily, hourly } = weather!;
 
-  const conditionLabel =
-    currentWeather.precipitationType !== 0
-      ? PTY_LABEL[currentWeather.precipitationType]
-      : SKY_LABEL[currentWeather.sky ?? 1];
-
   return (
     <Card className="relative" classNames={{ content: 'flex flex-col gap-4' }}>
       <IconButton className="absolute top-5 right-5 size-10" onClick={handleBookmarkToggle}>
@@ -82,7 +77,9 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
           {currentWeather.temperature.toFixed(0)}
           <span className="absolute text-2xl">°</span>
         </span>
-        <span className="text-base text-white/90">{conditionLabel}</span>
+        <span className="text-base text-white/90">
+          {getCurrentWeatherConditionLabel(currentWeather)}
+        </span>
         {daily.minDailyTemperature !== null && daily.maxDailyTemperature !== null ? (
           <div className="flex gap-2 text-sm">
             <span>
