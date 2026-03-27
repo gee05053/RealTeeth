@@ -4,6 +4,7 @@ import { ChevronRightIcon } from '@heroicons/react/24/outline';
 
 import type { BookmarkType } from '@/entities/bookmark/model/types';
 import useWeatherQuery from '@/entities/weather/model/queries';
+import DailyMinMaxTemperature from '@/entities/weather/ui/DailyMinMaxTemperature';
 import WeatherIcon from '@/entities/weather/ui/WeatherIcon';
 import Card from '@/shared/ui/card/Card';
 import InlineMessage from '@/shared/ui/inline-status-message/InlineStatusMessage';
@@ -52,19 +53,7 @@ const BookmarkCard = ({ bookmark }: BookmarkCardProps) => {
               sky={weather.currentWeather.sky ?? 1}
             />
           </div>
-          {weather.daily.minDailyTemperature !== null &&
-          weather.daily.maxDailyTemperature !== null ? (
-            <div className="flex gap-2 text-xs">
-              <span>
-                <span className="text-white/80">최고:</span>{' '}
-                <span className="font-medium">{weather.daily.maxDailyTemperature.toFixed(0)}°</span>
-              </span>
-              <span>
-                <span className="text-white/80">최저:</span>{' '}
-                <span className="font-medium">{weather.daily.minDailyTemperature.toFixed(0)}°</span>
-              </span>
-            </div>
-          ) : null}
+          <DailyMinMaxTemperature className="text-xs" daily={weather.daily} />
         </div>
       ) : (
         <InlineMessage className="text-xs">날씨 정보를 불러올 수 없어요.</InlineMessage>

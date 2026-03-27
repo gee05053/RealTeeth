@@ -12,6 +12,7 @@ import {
 
 import { getCurrentWeatherConditionLabel } from '@/entities/weather/lib/weatherLabels';
 import useWeatherQuery from '@/entities/weather/model/queries';
+import DailyMinMaxTemperature from '@/entities/weather/ui/DailyMinMaxTemperature';
 import HourlyForecastRow from '@/entities/weather/ui/HourlyForecastRow';
 import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
 import IconButton from '@/shared/ui/button/IconButton';
@@ -125,22 +126,7 @@ const BookmarkDetailPage = () => {
               {getCurrentWeatherConditionLabel(currentWeather)}
             </span>
           </div>
-          {daily.minDailyTemperature !== null && daily.maxDailyTemperature !== null ? (
-            <div className="flex gap-2 text-sm">
-              <span>
-                <span className="text-white/80">최고:</span>{' '}
-                <span className="font-medium">{daily.maxDailyTemperature.toFixed(0)}°</span>
-              </span>
-              <span>
-                <span className="text-white/80">최저:</span>{' '}
-                <span className="font-medium">{daily.minDailyTemperature.toFixed(0)}°</span>
-              </span>
-            </div>
-          ) : (
-            <InlineMessage className="text-sm">
-              제공된 최고/최저 기온 데이터가 없어요.
-            </InlineMessage>
-          )}
+          <DailyMinMaxTemperature daily={daily} />
         </div>
         <HourlyForecastRow hourlyForecast={hourly} />
       </Card>
