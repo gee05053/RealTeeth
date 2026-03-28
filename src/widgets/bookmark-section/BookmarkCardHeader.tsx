@@ -38,7 +38,10 @@ const BookmarkCardHeader = ({ bookmark }: BookmarkCardHeaderProps) => {
   };
 
   return (
-    <span className="flex w-full min-w-0 items-center justify-between gap-3">
+    <div
+      className="flex w-full min-w-0 items-center justify-between gap-2 sm:gap-3"
+      onPointerDown={e => e.stopPropagation()}
+    >
       {isEditingAlias ? (
         <input
           type="text"
@@ -49,9 +52,9 @@ const BookmarkCardHeader = ({ bookmark }: BookmarkCardHeaderProps) => {
           onKeyDown={handleKeyDown}
         />
       ) : (
-        <span className="truncate text-sm sm:text-base">{bookmark.alias}</span>
+        <span className="min-w-0 flex-1 truncate text-sm sm:text-base">{bookmark.alias}</span>
       )}
-      <span className="flex shrink-0 items-center gap-1.5">
+      <div className="flex shrink-0 items-center gap-1.5" onPointerDown={e => e.stopPropagation()}>
         {isEditingAlias ? (
           <>
             <IconButton onClick={handleSaveAlias}>
@@ -74,8 +77,8 @@ const BookmarkCardHeader = ({ bookmark }: BookmarkCardHeaderProps) => {
             </IconButton>
           </>
         )}
-      </span>
-    </span>
+      </div>
+    </div>
   );
 };
 

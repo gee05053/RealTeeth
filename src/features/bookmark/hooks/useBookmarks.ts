@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import { arrayMove } from '@dnd-kit/sortable';
+
 import type { BookmarkType } from '@/entities/bookmark/model/types';
 
 const STORAGE_KEY = 'bookmarks';
@@ -49,11 +51,19 @@ const useBookmarks = () => {
     );
   };
 
+  const reorderBookmarks = (activeId: string, overId: string): void => {
+    const oldIndex = bookmarks.findIndex(b => b.id === activeId);
+    const newIndex = bookmarks.findIndex(b => b.id === overId);
+    if (oldIndex < 0 || newIndex < 0 || oldIndex === newIndex) return;
+    saveBookmarks(arrayMove(bookmarks, oldIndex, newIndex));
+  };
+
   return {
     bookmarks,
     addBookmark,
     removeBookmark,
     updateBookmarkAlias,
+    reorderBookmarks,
   };
 };
 
