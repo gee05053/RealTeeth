@@ -67,7 +67,7 @@ const BookmarkCardHeader = ({ bookmark }: BookmarkCardHeaderProps) => {
               <PencilIcon className="size-4" />
             </IconButton>
             <IconButton
-              className="text-red-300 hover:bg-red-500/20 hover:text-red-50 active:bg-red-500/30"
+              className="hover:bg-red-500/20 hover:text-red-50 active:bg-red-500/30"
               onClick={() => removeBookmark(bookmark.id)}
             >
               <TrashIcon className="size-4" strokeWidth={1.5} />

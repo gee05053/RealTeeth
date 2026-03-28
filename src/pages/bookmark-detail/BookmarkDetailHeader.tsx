@@ -75,7 +75,7 @@ const BookmarkDetailCardTitle = ({ bookmark }: BookmarkDetailCardTitleProps) => 
         </IconButton>
       </div>
       <IconButton
-        className="size-9 shrink-0 text-red-300 hover:bg-red-500/20 hover:text-red-50 active:bg-red-500/30 sm:size-10"
+        className="size-9 shrink-0 hover:bg-red-500/20 hover:text-red-50 active:bg-red-500/30 sm:size-10"
         onClick={handleRemove}
       >
         <TrashIcon className="size-5 sm:size-6" />
