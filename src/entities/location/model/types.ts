@@ -4,3 +4,8 @@ export type GeocodedLocationType = {
   nx: number;
   ny: number;
 };
+
+export type DetectedLocationType = GeocodedLocationType & {
+  label: string;
+  fullLabel: string;
+};

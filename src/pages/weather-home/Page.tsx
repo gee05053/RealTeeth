@@ -1,15 +1,13 @@
 import { useState } from 'react';
 
 import type { SearchResultType } from '@/entities/location/lib/searchDistricts';
-import type { GeocodedLocationType } from '@/entities/location/model/types';
-import useDetectLocation, {
-  type DetectedLocationType,
-} from '@/features/detect-location/hooks/useDetectLocation';
+import type { DetectedLocationType, GeocodedLocationType } from '@/entities/location/model/types';
+import useDetectLocation from '@/features/detect-location/hooks/useDetectLocation';
 import Card from '@/shared/ui/card/Card';
 import InlineMessage from '@/shared/ui/inline-status-message/InlineStatusMessage';
 import BookmarkSection from '@/widgets/bookmark-section/BookmarkSection';
 import LocationSearch from '@/widgets/location-search/LocationSearch';
-import WeatherInfo from '@/widgets/weather-info/WeatherInfo';
+import WeatherInfo from '@/widgets/weather/WeatherInfo';
 
 type SearchedLocationType = SearchResultType & Partial<GeocodedLocationType>;
 

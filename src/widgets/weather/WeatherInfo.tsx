@@ -2,15 +2,16 @@ import { BookmarkIcon as BookmarkOutlineIcon } from '@heroicons/react/24/outline
 import { BookmarkIcon as BookmarkSolidIcon } from '@heroicons/react/24/solid';
 
 import type { BookmarkType } from '@/entities/bookmark/model/types';
+import type { DetectedLocationType } from '@/entities/location/model/types';
 import { getCurrentWeatherConditionLabel } from '@/entities/weather/lib/weatherLabels';
 import useWeatherQuery from '@/entities/weather/model/queries';
 import DailyMinMaxTemperature from '@/entities/weather/ui/DailyMinMaxTemperature';
-import HourlyForecastRow from '@/entities/weather/ui/HourlyForecastRow';
 import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
-import type { DetectedLocationType } from '@/features/detect-location/hooks/useDetectLocation';
 import IconButton from '@/shared/ui/button/IconButton';
 import Card from '@/shared/ui/card/Card';
 import InlineMessage from '@/shared/ui/inline-status-message/InlineStatusMessage';
+
+import HourlyForecastRow from './HourlyForecastRow';
 
 type WeatherInfoProps = {
   activeLocation: DetectedLocationType;

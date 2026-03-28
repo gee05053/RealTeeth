@@ -5,13 +5,13 @@ import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { getCurrentWeatherConditionLabel } from '@/entities/weather/lib/weatherLabels';
 import useWeatherQuery from '@/entities/weather/model/queries';
 import DailyMinMaxTemperature from '@/entities/weather/ui/DailyMinMaxTemperature';
-import HourlyForecastRow from '@/entities/weather/ui/HourlyForecastRow';
 import useBookmarks from '@/features/bookmark/hooks/useBookmarks';
 import IconButton from '@/shared/ui/button/IconButton';
 import Card from '@/shared/ui/card/Card';
 import InlineMessage from '@/shared/ui/inline-status-message/InlineStatusMessage';
+import HourlyForecastRow from '@/widgets/weather/HourlyForecastRow';
 
-import BookmarkDetailCardTitle from './BookmarkDetailHeader';
+import BookmarkDetailCardTitle from './BookmarkDetailTitle';
 
 const BookmarkDetailPage = () => {
   const { id } = useParams<{ id: string }>();
