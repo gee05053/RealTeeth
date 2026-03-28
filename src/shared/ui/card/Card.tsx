@@ -25,12 +25,19 @@ const Card = ({
 }: CardProps) => {
   return (
     <div
-      className={cn('flex flex-col gap-4 rounded-2xl bg-white/10 p-6 backdrop-blur-sm', className)}
+      className={cn(
+        'flex flex-col gap-3 rounded-2xl bg-white/10 p-4 backdrop-blur-sm sm:gap-4 sm:p-6',
+        className
+      )}
       {...restProps}
     >
       {(title || description) && (
         <div className={cn('flex flex-col gap-1', classNames?.header)}>
-          {title && <span className={cn('text-lg font-medium', classNames?.title)}>{title}</span>}
+          {title && (
+            <span className={cn('text-base font-medium sm:text-lg', classNames?.title)}>
+              {title}
+            </span>
+          )}
           {description && (
             <span className={cn('text-sm text-white/70', classNames?.description)}>
               {description}
@@ -39,7 +46,7 @@ const Card = ({
         </div>
       )}
       <div className={classNames?.content}>{children}</div>
-      <div className={classNames?.footer}>{footer}</div>
+      {footer && <div className={classNames?.footer}>{footer}</div>}
     </div>
   );
 };

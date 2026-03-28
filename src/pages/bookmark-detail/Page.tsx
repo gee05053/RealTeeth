@@ -46,23 +46,23 @@ const BookmarkDetailPage = () => {
 
   return (
     <>
-      <IconButton className="size-10" onClick={() => navigate(-1)}>
-        <ArrowLeftIcon className="size-6" />
+      <IconButton className="size-9 sm:size-10" onClick={() => navigate(-1)}>
+        <ArrowLeftIcon className="size-5 sm:size-6" />
       </IconButton>
 
       <Card
         className="relative"
-        classNames={{ content: 'flex flex-col gap-4' }}
+        classNames={{ content: 'flex flex-col gap-3 sm:gap-4' }}
         title={<BookmarkDetailCardTitle bookmark={bookmark} />}
         description={bookmark.fullLabel}
       >
         <div className="flex flex-col gap-2">
-          <div className="flex items-end gap-4">
-            <span className="relative text-5xl">
+          <div className="flex items-end gap-3 sm:gap-4">
+            <span className="relative text-4xl sm:text-5xl">
               {currentWeather.temperature.toFixed(0)}
-              <span className="absolute text-2xl">°</span>
+              <span className="absolute text-xl sm:text-2xl">°</span>
             </span>
-            <span className="text-base text-white/90">
+            <span className="text-sm text-white/90 sm:text-base">
               {getCurrentWeatherConditionLabel(currentWeather)}
             </span>
           </div>

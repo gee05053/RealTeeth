@@ -64,21 +64,24 @@ const WeatherInfo = ({ activeLocation }: WeatherInfoProps) => {
   const { currentWeather, daily, hourly } = weather!;
 
   return (
-    <Card className="relative" classNames={{ content: 'flex flex-col gap-4' }}>
-      <IconButton className="absolute top-5 right-5 size-10" onClick={handleBookmarkToggle}>
+    <Card className="relative" classNames={{ content: 'flex flex-col gap-3 sm:gap-4' }}>
+      <IconButton
+        className="absolute top-3 right-3 size-9 sm:top-4 sm:right-4 sm:size-10"
+        onClick={handleBookmarkToggle}
+      >
         {isBookmarked ? (
-          <BookmarkSolidIcon className="size-6 text-yellow-300" />
+          <BookmarkSolidIcon className="size-5 text-yellow-300 sm:size-6" />
         ) : (
-          <BookmarkOutlineIcon className="size-6" />
+          <BookmarkOutlineIcon className="size-5 sm:size-6" />
         )}
       </IconButton>
       <div className="flex flex-col items-center gap-2">
-        <p className="text-lg">{locationLabel}</p>
-        <span className="relative text-5xl">
+        <p className="text-center font-medium sm:text-lg">{locationLabel}</p>
+        <span className="relative text-4xl sm:text-5xl">
           {currentWeather.temperature.toFixed(0)}
-          <span className="absolute text-2xl">°</span>
+          <span className="absolute text-xl sm:text-2xl">°</span>
         </span>
-        <span className="text-base text-white/90">
+        <span className="text-center text-sm text-white/90 sm:text-base">
           {getCurrentWeatherConditionLabel(currentWeather)}
         </span>
         <DailyMinMaxTemperature daily={daily} />

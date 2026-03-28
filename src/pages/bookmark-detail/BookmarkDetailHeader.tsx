@@ -50,7 +50,7 @@ const BookmarkDetailCardTitle = ({ bookmark }: BookmarkDetailCardTitleProps) => 
       <div className="flex items-center gap-2">
         <input
           type="text"
-          className="flex-1 rounded-lg bg-white/20 px-3 py-1 text-lg outline-none"
+          className="min-w-0 flex-1 rounded-lg bg-white/20 px-3 py-1.5 outline-none sm:py-1 sm:text-lg"
           autoFocus
           value={aliasInputValue}
           onChange={e => setAliasInputValue(e.target.value)}
@@ -67,18 +67,18 @@ const BookmarkDetailCardTitle = ({ bookmark }: BookmarkDetailCardTitleProps) => 
   }
 
   return (
-    <div className="flex justify-between gap-3">
-      <div className="flex items-center gap-3">
+    <div className="flex items-center justify-between gap-2 sm:gap-3">
+      <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
         <p className="truncate">{bookmark.alias}</p>
         <IconButton onClick={handleStartEdit}>
           <PencilIcon className="size-4" />
         </IconButton>
       </div>
       <IconButton
-        className="size-10 text-red-200 hover:bg-red-500/20 hover:text-red-50 active:bg-red-500/30"
+        className="size-9 shrink-0 text-red-300 hover:bg-red-500/20 hover:text-red-50 active:bg-red-500/30 sm:size-10"
         onClick={handleRemove}
       >
-        <TrashIcon className="size-6" />
+        <TrashIcon className="size-5 sm:size-6" />
       </IconButton>
     </div>
   );

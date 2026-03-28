@@ -20,7 +20,7 @@ const BookmarkCard = ({ bookmark }: BookmarkCardProps) => {
 
   return (
     <Card
-      className="relative border border-white/40 bg-transparent p-3"
+      className="relative border border-white/40 bg-transparent p-3 sm:p-4"
       classNames={{
         header: 'border-b border-white/40 pb-3',
         title: 'text-sm',

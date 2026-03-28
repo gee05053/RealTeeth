@@ -12,7 +12,7 @@ const DailyMinMaxTemperature = ({ daily, className }: DailyMinMaxTemperatureProp
   const minTemperature = daily.minDailyTemperature;
 
   return (
-    <div className={cn('flex gap-2 text-sm', className)}>
+    <div className={cn('flex flex-wrap gap-x-2 gap-y-1 text-sm', className)}>
       {maxTemperature && minTemperature ? (
         <>
           <span>

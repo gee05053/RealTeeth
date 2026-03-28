@@ -123,7 +123,9 @@ const LocationSearch = ({ onRequestSelectedLocation }: LocationSearchProps) => {
       <div className="relative">
         <input
           type="text"
-          className="peer w-full rounded-xl bg-white/20 py-3 pr-4 pl-11 placeholder-white/40 backdrop-blur-sm outline-none focus:bg-white/30 disabled:opacity-50"
+          className="peer w-full rounded-xl bg-white/20 py-2.5 pr-4 pl-11 placeholder-white/40 backdrop-blur-sm outline-none focus:bg-white/30 disabled:opacity-50 sm:py-3"
+          inputMode="search"
+          enterKeyHint="search"
           disabled={isGeocoding}
           placeholder="지역을 검색하세요"
           value={inputSearchValue}
@@ -134,7 +136,7 @@ const LocationSearch = ({ onRequestSelectedLocation }: LocationSearchProps) => {
         <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 left-3 size-5 -translate-y-1/2 text-white/40 peer-disabled:opacity-50" />
       </div>
       {isOpenSearchResults && (
-        <ul className="absolute top-full right-0 left-0 z-10 mt-1 h-96 overflow-auto rounded-xl bg-white/20 backdrop-blur-sm">
+        <ul className="absolute top-full right-0 left-0 z-10 mt-1 max-h-[min(24rem,55vh)] overflow-auto rounded-xl bg-white/20 backdrop-blur-sm">
           {searchResults.length > 0 ? (
             searchResults.map((searchResult, index) => (
               <li key={searchResult.id}>
@@ -144,7 +146,7 @@ const LocationSearch = ({ onRequestSelectedLocation }: LocationSearchProps) => {
                     searchResultButtonRefs.current[index] = el;
                   }}
                   className={cn(
-                    'flex w-full items-center gap-2 px-4 py-3 text-sm text-white hover:bg-white/20',
+                    'flex w-full flex-col items-start gap-0.5 px-3 py-2.5 text-left text-sm text-white hover:bg-white/20 sm:flex-row sm:items-center sm:gap-2 sm:px-4 sm:py-3',
                     focusedSearchResultIndex === index && 'bg-white/20'
                   )}
                   onClick={() => handleSelect(searchResult)}

@@ -8,7 +8,10 @@ const BookmarkSection = () => {
   const { bookmarks } = useBookmarks();
 
   return (
-    <Card title="북마크" classNames={{ content: 'grid grid-cols-3 gap-3' }}>
+    <Card
+      title="북마크"
+      classNames={{ content: 'grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3' }}
+    >
       {bookmarks.length > 0 ? (
         bookmarks.map(bookmark => <BookmarkCard key={bookmark.id} bookmark={bookmark} />)
       ) : (
